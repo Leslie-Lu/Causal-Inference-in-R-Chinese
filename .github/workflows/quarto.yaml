@@ -28,7 +28,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
         
       - name: Install system dependencies 
-        run: sudo apt-get update && sudo apt-get install -y pandoc libharfbuzz-dev libfreetype6-dev libfribidi-dev
+        run: sudo apt-get update && sudo apt-get install -y pandoc libharfbuzz-dev libfreetype6-dev libfribidi-dev libglpk40
 
       - name: Install Google Fonts
         run: |
