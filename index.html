@@ -236,8 +236,8 @@ div.csl-indent {
 
 <section id="前言" class="level1 unnumbered">
 <h1 class="unnumbered">前言</h1>
-<p>欢迎来到 <a href="https://www.r-causal.org/"><em>Causal Inference in R</em></a> 中文版。 本书中文版内容的翻译由<a href="https://leslie-lu.github.io/">陆震</a>完成并维护。 目前本书中文版内容还没有纸质出版，如果读者是出版人员，并有意愿负责出版本书，请通过 <a href="mailto:luzh29@mail2.sysu.edu.cn">luzh29@mail2.sysu.edu.cn</a> 联系我们。</p>
-<p>对于因果问题的回答，在科学研究与商业用途中都具有重要意义。但是现实中，诸如随机临床试验与 A/B 测试等因果推断方法并不总是可行的。因此，我们需要借助观察数据来进行因果推断。 本书将介绍如何使用 R 语言进行因果推断，以及如何使用现代因果推断方法来解决实际问题。 通过本书，您将学习到：</p>
+<p>欢迎来到 <a href="https://www.r-causal.org/"><em>Causal Inference in R</em></a> 中文版。本书中文版内容的翻译由<a href="https://leslie-lu.github.io/">陆震</a>完成并维护。目前本书中文版内容还没有纸质出版，如果读者是出版人员，并有意愿负责出版本书，请通过 <a href="mailto:luzh29@mail2.sysu.edu.cn">luzh29@mail2.sysu.edu.cn</a> 联系我们。</p>
+<p>对于因果问题的回答，在科学研究与商业用途中都具有重要意义。但是现实中，诸如随机临床试验与 A/B 测试等因果推断方法并不总是可行的。因此，我们需要借助观察数据来进行因果推断。本书将介绍如何使用 R 语言进行因果推断，以及如何使用现代因果推断方法来解决实际问题。通过本书，您将学习到：</p>
 <ol type="1">
 <li>更好地理解因果推断的基本概念；</li>
 <li>理解因果推断的假设；</li>
@@ -245,7 +245,7 @@ div.csl-indent {
 <li>使用现代因果推断方法来解决实际问题；</li>
 <li>进行因果推断的敏感性分析。</li>
 </ol>
-<p>本书的目标读者是数据科学家、数据分析师、科学研究人员以及对因果推断感兴趣的读者。 尽管在现实中，提问的因果问题可能是不同的，如“医学中癌症相关因果问题”或“某个广告点击率的因果关系”等，但是这些问题背后的因果推断方法是相通的。 本书中，我们使用来自医学、经济以及科技相关方面的例子来具体地阐释因果推断。 需要提醒大家的是，由于本书聚焦于借助观察数据进行因果推断，因此本书并不会涉及到随机临床试验、A/B 测试的内容。</p>
+<p>本书的目标读者是数据科学家、数据分析师、科学研究人员以及对因果推断感兴趣的读者。尽管在现实中，提问的因果问题可能是不同的，如“医学中癌症相关因果问题”或“某个广告点击率的因果关系”等，但是这些问题背后的因果推断方法是相通的。本书中，我们使用来自医学、经济以及科技相关方面的例子来具体地阐释因果推断。需要提醒大家的是，由于本书聚焦于借助观察数据进行因果推断，因此本书并不会涉及到随机临床试验、A/B 测试的内容。</p>
 <p>在阅读本书前，我们建议您具备以下知识：</p>
 <ol type="1">
 <li>熟悉 <a href="https://www.tidyverse.org/">tidyverse</a> 生态系统中的 R 包及其总体理念。例如，我们在本书中大量使用 dplyr 和 ggplot2，但不会解释它们的基本语法。要了解更多关于 tidyverse 的入门知识，我们推荐阅读 <a href="https://r4ds.hadley.nz/"><em>R for Data Science</em></a>；</li>
@@ -253,24 +253,24 @@ div.csl-indent {
 <li>熟悉 R 的其他基础知识，例如<a href="https://r4ds.hadley.nz/functions.html">编写函数</a>。<a href="https://r4ds.hadley.nz/"><em>R for Data Science</em></a> 也是这些主题的一个很好的资源。（如果您想深入了解 R 这门编程语言，我们推荐 <a href="https://adv-r.hadley.nz/index.html"><em>Advanced R</em></a>。）</li>
 <li>另外，本书还将使用 tidymodels 生态系统中的工具，这是一组与 tidyverse 相关的 R 包，用于建模。但 tidymodels 也专注于预测模型的构建，因此它的许多工具并不适用于本书。然而，如果您对这个主题感兴趣，我们推荐阅读 <a href="https://www.tmwr.org"><em>Tidy Modeling with R</em></a>。</li>
 </ol>
-<p>还有几本关于因果推断的优秀书籍。 本书的重点是基于 R 进行因果推断，但从其他角度了解这个领域也是有帮助的。 您可能会喜欢这几本书：</p>
+<p>还有几本关于因果推断的优秀书籍。本书的重点是基于 R 进行因果推断，但从其他角度了解这个领域也是有帮助的。您可能会喜欢这几本书：</p>
 <ul>
 <li><a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>Causal Inference: What If?</em></a></li>
 <li><a href="https://mixtape.scunning.com/"><em>Causal Inference: The Mixtape</em></a></li>
 <li><a href="https://theeffectbook.net/"><em>The Effect</em></a></li>
 </ul>
-<p>第一本书侧重于流行病学。 后两本书侧重于计量经济学。 我们还推荐阅读 <em>The Book of Why</em> <span class="citation" data-cites="pearl2018why">Pearl and Mackenzie (<a href="chapters/99-references.html#ref-pearl2018why" role="doc-biblioref">2018</a>)</span> 以了解更多关于因果图的信息。</p>
+<p>第一本书侧重于流行病学。后两本书侧重于计量经济学。我们还推荐阅读 <em>The Book of Why</em> <span class="citation" data-cites="pearl2018why">Pearl and Mackenzie (<a href="chapters/99-references.html#ref-pearl2018why" role="doc-biblioref">2018</a>)</span> 以了解更多关于因果图的信息。</p>
 <section id="本书约定" class="level2">
 <h2 class="anchored" data-anchor-id="本书约定">本书约定</h2>
 <section id="现代-r-特性" class="level3">
 <h3 class="anchored" data-anchor-id="现代-r-特性">现代 R 特性</h3>
-<p>我们在本书中使用了 R 4.1.0 及以上版本中的两个现代 R 特性。 第一个是原生管道操作符 <code>|&gt;</code>。 这个 R 特性类似于您可能更熟悉的 tidyverse 中的 <code>%&gt;%</code>。 在一般情况下，这两者可以互换使用。 而两者一个显著的区别是，<code>|&gt;</code> 使用 <code>_</code> 符号来指示管道的结果，例如：<code>.df |&gt; lm(y ~ x, data = _)</code>。 有关此主题的更多信息，请参阅 <a href="https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/">Tidyverse 博客文章</a>。</p>
-<p>另一个我们在本书中使用的现代 R 特性是原生 lambda，这是一种编写简短函数的方法，形式为 <code>\(.x) do_something(.x)</code>。 它类似于 purrr 包中的 <code>~</code> lambda 表示。 需要注意的是，原生 lambda 与 <code>function(.x) do_something(.x)</code> 是相同的，其中 <code>\</code> 是 <code>function</code> 的简写。 有关此主题的更多信息，请参阅 <a href="https://r4ds.hadley.nz/iteration.html"><em>R for Data Science</em></a> 中关于迭代的章节。</p>
+<p>我们在本书中使用了 R 4.1.0 及以上版本中的两个现代 R 特性。第一个是原生管道操作符 <code>|&gt;</code>。这个 R 特性类似于您可能更熟悉的 tidyverse 中的 <code>%&gt;%</code>。在一般情况下，这两者可以互换使用。而两者一个显著的区别是，<code>|&gt;</code> 使用 <code>_</code> 符号来指示管道的结果，例如：<code>.df |&gt; lm(y ~ x, data = _)</code>。有关此主题的更多信息，请参阅 <a href="https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/">Tidyverse 博客文章</a>。</p>
+<p>另一个我们在本书中使用的现代 R 特性是原生 lambda，这是一种编写简短函数的方法，形式为 <code>\(.x) do_something(.x)</code>。它类似于 purrr 包中的 <code>~</code> lambda 表示。需要注意的是，原生 lambda 与 <code>function(.x) do_something(.x)</code> 是相同的，其中 <code>\</code> 是 <code>function</code> 的简写。有关此主题的更多信息，请参阅 <a href="https://r4ds.hadley.nz/iteration.html"><em>R for Data Science</em></a> 中关于迭代的章节。</p>
 </section>
 </section>
 <section id="主题" class="level2">
 <h2 class="anchored" data-anchor-id="主题">主题</h2>
-<p>本书中的图均使用一致的主题，我们不会在每个代码块中都包含它，这意味着如果您运行可视化代码，可能会得到略有不同的结果。 我们设置了以下与 ggplot2 相关的默认值：</p>
+<p>本书中的图均使用一致的主题，我们不会在每个代码块中都包含它，这意味着如果您运行可视化代码，可能会得到略有不同的结果。我们设置了以下与 ggplot2 相关的默认值：</p>
 <!-- TODO: make sure these are up to date -->
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
