@@ -24,7 +24,7 @@ book:
   title: "Causal Inference in R 中文版"
   author: ["Malcolm Barrett, Lucy D'Agostino McGowan, Travis Gerke", "翻译：陆震"]
   date: "today"
-  # repo-url: 
+  repo-url: https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese
   repo-actions: [edit, issue]
   chapters:
     - index.qmd
