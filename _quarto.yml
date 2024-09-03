@@ -41,6 +41,7 @@ format:
       - cosmo
       - style.scss
     include-in-header: "plausible.html"
+    email-obfuscation: javascript
   # pdf:
   #   documentclass: scrreprt
 
