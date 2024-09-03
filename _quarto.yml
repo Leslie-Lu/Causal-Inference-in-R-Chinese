@@ -29,6 +29,10 @@ book:
   chapters:
     - index.qmd
 
+    - part: 提出因果问题
+      chapters: 
+      - chapters/01-casual-to-causal.qmd
+    
     - chapters/99-references.qmd
 
 bibliography: citations.bib
