@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Malcolm Barrett, et al.">
-<meta name="author" content="陆震（译）">
-<meta name="dcterms.date" content="2024-09-03">
 
-<title>Causal Inference in R 中文版</title>
+<title>1&nbsp; 从随意推断（casual inference）到因果推断（causal inference） – Causal Inference in R 中文版</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -80,23 +43,24 @@ div.csl-indent {
 }</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./chapters/01-casual-to-causal.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/99-references.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -138,7 +102,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">前言</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -153,7 +117,7 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Causal Inference in R 中文版</a> 
+      <a href="../">Causal Inference in R 中文版</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -168,7 +132,7 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">前言</span></a>
   </div>
 </li>
@@ -183,7 +147,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/01-casual-to-causal.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-casual-to-causal.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span></a>
   </div>
 </li>
@@ -191,7 +155,7 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/99-references.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/99-references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">参考文献</span></a>
   </div>
 </li>
@@ -205,43 +169,23 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#前言" id="toc-前言" class="nav-link active" data-scroll-target="#前言">前言</a>
-  <ul class="collapse">
-  <li><a href="#本书约定" id="toc-本书约定" class="nav-link" data-scroll-target="#本书约定">本书约定</a>
-  <ul class="collapse">
-  <li><a href="#现代-r-特性" id="toc-现代-r-特性" class="nav-link" data-scroll-target="#现代-r-特性">现代 R 特性</a></li>
-  </ul></li>
-  <li><a href="#主题" id="toc-主题" class="nav-link" data-scroll-target="#主题">主题</a></li>
-  </ul></li>
+  <li><a href="#因果推断" id="toc-因果推断" class="nav-link active" data-scroll-target="#因果推断"><span class="header-section-number">1.1</span> 因果推断</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/edit/main/chapters/01-casual-to-causal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Causal Inference in R 中文版</h1>
+<h1 class="title"><span id="sec-causal-question" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Authors</div>
-    <div class="quarto-title-meta-contents">
-             <p>Malcolm Barrett, et al. </p>
-             <p>陆震（译） </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">September 3, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -251,105 +195,58 @@ div.csl-indent {
 </header>
 
 
-<section id="前言" class="level1 unnumbered">
-<h1 class="unnumbered">前言</h1>
-<p>欢迎来到 <a href="https://www.r-causal.org/"><em>Causal Inference in R</em></a> 中文版。本书中文版内容的翻译由<a href="https://leslie-lu.github.io/">陆震</a>完成并维护。目前本书中文版内容还没有纸质出版，如果读者是出版人员，并有意愿负责出版本书，请通过 <script type="text/javascript">
-<!--
-h='&#x6d;&#x61;&#x69;&#108;&#50;&#46;&#x73;&#x79;&#x73;&#x75;&#46;&#x65;&#100;&#x75;&#46;&#x63;&#110;';a='&#64;';n='&#108;&#x75;&#122;&#104;&#50;&#x39;';e=n+a+h;
-document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\/'+'a'+'>');
-// -->
-</script><noscript>luzh29 at mail2 dot sysu dot edu dot cn</noscript> 联系我们。</p>
-<p>对于因果问题的回答，在科学研究与商业用途中都具有重要意义。但是现实中，诸如随机临床试验与 A/B 测试等因果推断方法并不总是可行的。因此，我们需要借助观察数据来进行因果推断。本书将介绍如何使用 R 语言进行因果推断，以及如何使用现代因果推断方法来解决实际问题。通过本书，您将学习到：</p>
-<ol type="1">
-<li>更好地理解因果推断的基本概念；</li>
-<li>理解因果推断的假设；</li>
-<li>准确识别进行因果推断的目标人群；</li>
-<li>使用现代因果推断方法来解决实际问题；</li>
-<li>进行因果推断的敏感性分析。</li>
-</ol>
-<p>本书的目标读者是数据科学家、数据分析师、科学研究人员以及对因果推断感兴趣的读者。尽管在现实中，提问的因果问题可能是不同的，如“医学中癌症相关因果问题”或“某个广告点击率的因果关系”等，但是这些问题背后的因果推断方法是相通的。本书中，我们使用来自医学、经济以及科技相关方面的例子来具体地阐释因果推断。需要提醒大家的是，由于本书聚焦于借助观察数据进行因果推断，因此本书并不会涉及到随机临床试验、A/B 测试的内容。</p>
-<p>在阅读本书前，我们建议您具备以下知识：</p>
-<ol type="1">
-<li>熟悉 <a href="https://www.tidyverse.org/">tidyverse</a> 生态系统中的 R 包及其总体理念。例如，我们在本书中大量使用 dplyr 和 ggplot2，但不会解释它们的基本语法。要了解更多关于 tidyverse 的入门知识，我们推荐阅读 <a href="https://r4ds.hadley.nz/"><em>R for Data Science</em></a>；</li>
-<li>熟悉 R 中的基本统计建模。例如，我们将在本书中使用 <code>lm()</code> 和 <code>glm()</code> 拟合模型，但不会讨论它们的工作原理。如果您想了解更多关于 R 中建模函数的信息，我们推荐阅读 <a href="https://www.tmwr.org"><em>Tidy Modeling with R</em></a> 中的 <a href="https://www.tmwr.org/base-r.html">“A Review of R Modeling Fundamentals”</a>；</li>
-<li>熟悉 R 的其他基础知识，例如<a href="https://r4ds.hadley.nz/functions.html">编写函数</a>。<a href="https://r4ds.hadley.nz/"><em>R for Data Science</em></a> 也是这些主题的一个很好的资源。（如果您想深入了解 R 这门编程语言，我们推荐 <a href="https://adv-r.hadley.nz/index.html"><em>Advanced R</em></a>。）</li>
-<li>另外，本书还将使用 tidymodels 生态系统中的工具，这是一组与 tidyverse 相关的 R 包，用于建模。但 tidymodels 也专注于预测模型的构建，因此它的许多工具并不适用于本书。然而，如果您对这个主题感兴趣，我们推荐阅读 <a href="https://www.tmwr.org"><em>Tidy Modeling with R</em></a>。</li>
-</ol>
-<p>还有几本关于因果推断的优秀书籍。本书的重点是基于 R 进行因果推断，但从其他角度了解这个领域也是有帮助的。您可能会喜欢这几本书：</p>
-<ul>
-<li><a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>Causal Inference: What If?</em></a></li>
-<li><a href="https://mixtape.scunning.com/"><em>Causal Inference: The Mixtape</em></a></li>
-<li><a href="https://theeffectbook.net/"><em>The Effect</em></a></li>
-</ul>
-<p>第一本书侧重于流行病学。后两本书侧重于计量经济学。我们还推荐阅读 <em>The Book of Why</em> <span class="citation" data-cites="pearl2018why">Pearl and Mackenzie (<a href="chapters/99-references.html#ref-pearl2018why" role="doc-biblioref">2018</a>)</span> 以了解更多关于因果图的信息。</p>
-<section id="本书约定" class="level2">
-<h2 class="anchored" data-anchor-id="本书约定">本书约定</h2>
-<section id="现代-r-特性" class="level3">
-<h3 class="anchored" data-anchor-id="现代-r-特性">现代 R 特性</h3>
-<p>我们在本书中使用了 R 4.1.0 及以上版本中的两个现代 R 特性。第一个是原生管道操作符 <code>|&gt;</code>。这个 R 特性类似于您可能更熟悉的 tidyverse 中的 <code>%&gt;%</code>。在一般情况下，这两者可以互换使用。而两者一个显著的区别是，<code>|&gt;</code> 使用 <code>_</code> 符号来指示管道的结果，例如：<code>.df |&gt; lm(y ~ x, data = _)</code>。有关此主题的更多信息，请参阅 <a href="https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/">Tidyverse 博客文章</a>。</p>
-<p>另一个我们在本书中使用的现代 R 特性是原生 lambda，这是一种编写简短函数的方法，形式为 <code>\(.x) do_something(.x)</code>。它类似于 purrr 包中的 <code>~</code> lambda 表示。需要注意的是，原生 lambda 与 <code>function(.x) do_something(.x)</code> 是相同的，其中 <code>\</code> 是 <code>function</code> 的简写。有关此主题的更多信息，请参阅 <a href="https://r4ds.hadley.nz/iteration.html"><em>R for Data Science</em></a> 中关于迭代的章节。</p>
-</section>
-</section>
-<section id="主题" class="level2">
-<h2 class="anchored" data-anchor-id="主题">主题</h2>
-<p>本书中的图均使用一致的主题，我们不会在每个代码块中都包含它，这意味着如果您运行可视化代码，可能会得到略有不同的结果。我们设置了以下与 ggplot2 相关的默认值：</p>
-<!-- TODO: make sure these are up to date -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 设置 ggplot2 中的默认颜色为色盲友好</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 使用 Okabe-Ito 和 Viridis 调色板</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggplot2.discrete.colour =</span> ggokabeito<span class="sc">::</span><span class="fu">palette_okabe_ito</span>(),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggplot2.discrete.fill =</span> ggokabeito<span class="sc">::</span><span class="fu">palette_okabe_ito</span>(),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggplot2.continuous.colour =</span> <span class="st">"viridis"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggplot2.continuous.fill =</span> <span class="st">"viridis"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 设置主题字体字号</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">book.base_family =</span> <span class="st">"sans"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">book.base_size =</span> <span class="dv">14</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置默认主题</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">base_size =</span> <span class="fu">getOption</span>(<span class="st">"book.base_size"</span>),</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">base_family =</span> <span class="fu">getOption</span>(<span class="st">"book.base_family"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%+replace%</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>我们还屏蔽了一些来自 ggdag 的函数，以便进行自定义：</p>
+<div class="callout-title-container flex-fill">
+正在进行中 🚧
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>您正在阅读 <em>Causal Inference in R 中文版</em>的第一版草稿。本章节大部分已经完成，但我们可能会进行一些小的调整或文字编辑。</p>
+</div>
+</div>
+</div>
+</div>
+<section id="因果推断" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="因果推断"><span class="header-section-number">1.1</span> 因果推断</h2>
+<p>因果分析的核心首先是因果问题，它决定了我们分析什么数据、如何分析这些数据以及我们的推断结论适用于什么人群。提出一个好的因果问题是比较难的，相对来讲，因果分析则要简单得多。本书属于方法应用性质，主要聚焦于因果推断的分析阶段。在本书前六章中，我们将讨论什么是因果问题，如何改进我们的问题，以及思考一些例子。</p>
+<p>因果问题是我们可以通过统计方法提出的一组更广泛问题中的一部分，这些问题依据数据科学的主要目的可以大致分为：描述、预测和因果推断 <span class="citation" data-cites="hernan2019">(<a href="99-references.html#ref-hernan2019" role="doc-biblioref">Hernán, Hsu, and Healy 2019</a>)</span>。然而，在实际中，受到所使用统计方法的影响（如，这三类问题都可使用回归来处理）以及我们讨论它们的方式影响，我们常常会将这三种问题混淆在一起。当我们实际想要进行的是基于非随机数据的因果推断时，我们经常使用“关联”（association）这样的委婉说法，而不是直接声明我们想要估计因果效应 <span class="citation" data-cites="hernan2018">(<a href="99-references.html#ref-hernan2018" role="doc-biblioref"><strong>hernan2018?</strong></a>)</span>。</p>
+<p>例如，最近一项关于流行病学研究中所使用语言的研究显示，估计效应的描述中最常见的词根是 “associate”，而许多研究人员也默认 “associate” 至少暗示了某种因果效应 (<a href="#fig-word-ranking" class="quarto-xref">Figure&nbsp;<span>1.1</span></a>) <span class="citation" data-cites="haber_causal_language">(<a href="99-references.html#ref-haber_causal_language" role="doc-biblioref">Haber et al. 2022</a>)</span>。在分析的全部研究中，只有大约 1% 使用了 “cause” 这个词根。此外，三分之一的研究基于结论提出了相关的行动建议，而其中 80% 的建议都暗含了某种因果效应。而提出了行动建议的这些研究通常比那些只是描述效应的研究（如，使用 “associate” 和 “compare” 这样的词根）要有更强的因果效应暗示。另一方面，尽管一些研究暗示其目标是因果推断，但只有大约 4% 使用了本书将讨论的那些正式的因果推断模型，其它研究更多的做法是通过对先前相关研究或理论的引用讨论来证明他们建立的因果关系的合理性。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theme_dag <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  ggdag<span class="sc">::</span><span class="fu">theme_dag</span>(<span class="at">base_family =</span> <span class="fu">getOption</span>(<span class="st">"book.base_family"</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>geom_dag_label_repel <span class="ot">&lt;-</span> <span class="cf">function</span>(..., <span class="at">seed =</span> <span class="dv">10</span>) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  ggdag<span class="sc">::</span><span class="fu">geom_dag_label_repel</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(x, y, <span class="at">label =</span> label),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">box.padding =</span> <span class="fl">3.5</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">max.overlaps =</span> <span class="cn">Inf</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">getOption</span>(<span class="st">"book.base_family"</span>),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> seed,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.size =</span> <span class="cn">NA</span>,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.padding =</span> <span class="fl">0.1</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">getOption</span>(<span class="st">"book.base_size"</span>) <span class="sc">/</span> <span class="dv">3</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-word-ranking" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-word-ranking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-casual-to-causal_files/figure-html/fig-word-ranking-1.png" class="img-fluid figure-img" width="672">
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-word-ranking-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: 研究人员使用的词根的因果强度排名。具有更多 “Strong” 排名的词根比那些具有更多 “None” 或 “Weak” 评分的词根具有更强的因果暗示。数据来自 Haber 等人。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>因为没有明确地提出带有具体因果假设和目标的因果问题，我们最终都得到了“薛定谔的因果推断”：</p>
+<blockquote class="blockquote">
+<p>我们的结果表明，“薛定谔的因果推断”是很常见的，即研究一方面避免声明（甚至明确否认）对估计因果效应的兴趣，但另一方面又充满了因果意图、推断、因果暗示和行动建议。</p>
+<p>— <span class="citation" data-cites="haber_causal_language">Haber et al. (<a href="99-references.html#ref-haber_causal_language" role="doc-biblioref">2022</a>)</span></p>
+</blockquote>
+<p>这种方法是随意推断（casual inference）的一个例子：在没有做必要的工作来理解因果问题并处理因果假设的情况下进行推断。</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-pearl2018why" class="csl-entry" role="listitem">
-Pearl, J., and D. Mackenzie. 2018. <em>The Book of Why: The New Science of Cause and Effect</em>. Penguin Books Limited.
+<div id="ref-haber_causal_language" class="csl-entry" role="listitem">
+Haber, N. A., S. E. Wieten, J. M. Rohrer, O. A. Arah, P. W. G. Tennant, E. A. Stuart, E. J. Murray, et al. 2022. <span>“<span class="nocase"><span>C</span>ausal and <span>A</span>ssociational <span>L</span>anguage in <span>O</span>bservational <span>H</span>ealth <span>R</span>esearch: <span>A</span> <span>S</span>ystematic <span>E</span>valuation</span>.”</span> <em>Am J Epidemiol</em> 191 (12): 2084–97.
+</div>
+<div id="ref-hernan2019" class="csl-entry" role="listitem">
+Hernán, Miguel A., John Hsu, and Brian Healy. 2019. <span>“A Second Chance to Get Causal Inference Right: A Classification of Data Science Tasks.”</span> <em>CHANCE</em> 32 (1): 42–49. <a href="https://doi.org/10.1080/09332480.2019.1579578">https://doi.org/10.1080/09332480.2019.1579578</a>.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -775,10 +672,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="前言">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">前言</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-casual-to-causal.html" class="pagination-link" aria-label="从随意推断（casual inference）到因果推断（causal inference）">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/99-references.html" class="pagination-link" aria-label="参考文献">
+        <span class="nav-page-text">参考文献</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -787,4 +687,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/edit/main/chapters/01-casual-to-causal.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
