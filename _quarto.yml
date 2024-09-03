@@ -22,7 +22,7 @@ execute:
 
 book:
   title: "Causal Inference in R 中文版"
-  author: ["Malcolm Barrett, et al.", "翻译：陆震"]
+  author: ["Malcolm Barrett, et al.", "陆震（译）"]
   date: "today"
   repo-url: https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese
   repo-actions: [edit, issue]
