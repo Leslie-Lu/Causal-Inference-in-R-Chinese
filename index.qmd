@@ -1,10 +1,3 @@
----
-about:
-  links:
-    - text: luzh29@mail2.sysu.edu.cn
-      href: mailto:luzh29@mail2.sysu.edu.cn
----
-
 # 前言 {.unnumbered}
 
 欢迎来到 [*Causal Inference in R*](https://www.r-causal.org/) 中文版。本书中文版内容的翻译由[陆震](https://leslie-lu.github.io/)完成并维护。目前本书中文版内容还没有纸质出版，如果读者是出版人员，并有意愿负责出版本书，请通过 [luzh29@mail2.sysu.edu.cn](mailto:luzh29@mail2.sysu.edu.cn) 联系我们。
