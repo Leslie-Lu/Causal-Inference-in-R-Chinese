@@ -215,7 +215,7 @@ div.csl-indent {
 <section id="因果推断" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="因果推断"><span class="header-section-number">1.1</span> 因果推断</h2>
 <p>因果分析的核心首先是因果问题，它决定了我们分析什么数据、如何分析这些数据以及我们的推断结论适用于什么人群。提出一个好的因果问题是比较难的，相对来讲，因果分析则要简单得多。本书属于方法应用性质，主要聚焦于因果推断的分析阶段。在本书前六章中，我们将讨论什么是因果问题，如何改进我们的问题，以及思考一些例子。</p>
-<p>因果问题是我们可以通过统计方法提出的一组更广泛问题中的一部分，这些问题依据数据科学的主要目的可以大致分为：描述、预测和因果推断 <span class="citation" data-cites="hernan2019">(<a href="99-references.html#ref-hernan2019" role="doc-biblioref">Hernán, Hsu, and Healy 2019</a>)</span>。然而，在实际中，受到所使用统计方法的影响（如，这三类问题都可使用回归来处理）以及我们讨论它们的方式影响，我们常常会将这三种问题混淆在一起。当我们实际想要进行的是基于非随机数据的因果推断时，我们经常使用“关联”（association）这样的委婉说法，而不是直接声明我们想要估计因果效应 <span class="citation" data-cites="hernan2018">(<a href="99-references.html#ref-hernan2018" role="doc-biblioref"><strong>hernan2018?</strong></a>)</span>。</p>
+<p>因果问题是我们可以通过统计方法提出的一组更广泛问题中的一部分，这些问题依据数据科学的主要目的可以大致分为：描述、预测和因果推断 <span class="citation" data-cites="hernan2019">(<a href="99-references.html#ref-hernan2019" role="doc-biblioref">Hernán, Hsu, and Healy 2019</a>)</span>。然而，在实际中，受到所使用统计方法的影响（如，这三类问题都可使用回归来处理）以及我们讨论它们的方式影响，我们常常会将这三种问题混淆在一起。当我们实际想要进行的是基于非随机数据的因果推断时，我们经常使用“关联”（association）这样的委婉说法，而不是直接声明我们想要估计因果效应 <span class="citation" data-cites="Hernan2018">(<a href="99-references.html#ref-Hernan2018" role="doc-biblioref">Hernán 2018</a>)</span>。</p>
 <p>例如，最近一项关于流行病学研究中所使用语言的研究显示，估计效应的描述中最常见的词根是 “associate”，而许多研究人员也默认 “associate” 至少暗示了某种因果效应 (<a href="#fig-word-ranking" class="quarto-xref">Figure&nbsp;<span>1.1</span></a>) <span class="citation" data-cites="haber_causal_language">(<a href="99-references.html#ref-haber_causal_language" role="doc-biblioref">Haber et al. 2022</a>)</span>。在分析的全部研究中，只有大约 1% 使用了 “cause” 这个词根。此外，三分之一的研究基于结论提出了相关的行动建议，而其中 80% 的建议都暗含了某种因果效应。而提出了行动建议的这些研究通常比那些只是描述效应的研究（如，使用 “associate” 和 “compare” 这样的词根）要有更强的因果效应暗示。另一方面，尽管一些研究暗示其目标是因果推断，但只有大约 4% 使用了本书将讨论的那些正式的因果推断模型，其它研究更多的做法是通过对先前相关研究或理论的引用讨论来证明他们建立的因果关系的合理性。</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -242,6 +242,9 @@ Figure&nbsp;1.1: 研究人员使用的词根的因果强度排名。具有更多
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-haber_causal_language" class="csl-entry" role="listitem">
 Haber, N. A., S. E. Wieten, J. M. Rohrer, O. A. Arah, P. W. G. Tennant, E. A. Stuart, E. J. Murray, et al. 2022. <span>“<span class="nocase"><span>C</span>ausal and <span>A</span>ssociational <span>L</span>anguage in <span>O</span>bservational <span>H</span>ealth <span>R</span>esearch: <span>A</span> <span>S</span>ystematic <span>E</span>valuation</span>.”</span> <em>Am J Epidemiol</em> 191 (12): 2084–97.
+</div>
+<div id="ref-Hernan2018" class="csl-entry" role="listitem">
+Hernán, Miguel A. 2018. <span>“The C-Word: Scientific Euphemisms Do Not Improve Causal Inference From Observational Data.”</span> <em>American Journal of Public Health</em> 108 (5): 616–19. <a href="https://doi.org/10.2105/ajph.2018.304337">https://doi.org/10.2105/ajph.2018.304337</a>.
 </div>
 <div id="ref-hernan2019" class="csl-entry" role="listitem">
 Hernán, Miguel A., John Hsu, and Brian Healy. 2019. <span>“A Second Chance to Get Causal Inference Right: A Classification of Data Science Tasks.”</span> <em>CHANCE</em> 32 (1): 42–49. <a href="https://doi.org/10.1080/09332480.2019.1579578">https://doi.org/10.1080/09332480.2019.1579578</a>.
