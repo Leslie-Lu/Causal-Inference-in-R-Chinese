@@ -1,6 +1,7 @@
 project:
   type: book
   pre-render: R/setup.R
+  output-dir: _book
 
 callout-appearance: simple
 # see this quarto discussion issue for info on lua filter
