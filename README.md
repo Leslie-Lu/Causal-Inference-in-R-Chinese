@@ -11,5 +11,6 @@ Inference in R*](https://www.r-causal.org/) 的中文版。
 
 本书源文件均用 [Quarto](https://quarto.org/)
 撰写。如果你发现了任何错误，请点击菜单栏上的**编辑**按钮，并在 Github
-上向我提交合并请求。如果读者有任何的疑问，请通过创建 GitHub issue
+上向我提交合并请求。如果读者有任何的疑问，请通过创建 [GitHub
+issue](https://github.com/Leslie-Lu/Causal-Inference-in-R-Chinese/issues)
 与我联系。
