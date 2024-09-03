@@ -45,6 +45,7 @@ format:
   # pdf:
   #   documentclass: scrreprt
 
+email-obfuscation: javascript
 editor_options:
   markdown:
     wrap: sentence
