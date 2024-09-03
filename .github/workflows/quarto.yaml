@@ -38,12 +38,13 @@ jobs:
         uses: quarto-dev/quarto-actions/render@v2
         with:
           to: html
+          output_dir: ./_book
 
       - name: Deploy to github pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           publish_dir: ./_book
-          publish_branch: main
+          publish_branch: gh-pages
 
 
