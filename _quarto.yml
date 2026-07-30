@@ -5,14 +5,14 @@ project:
 callout-appearance: simple
 # see this quarto discussion issue for info on lua filter
 # https://github.com/quarto-dev/quarto-cli/discussions/2869#discussioncomment-3886253
-filters: 
+filters:
  - chapters/lua/callouts.lua
 
 execute:
-  freeze: auto  
-  echo: true 
+  freeze: auto
+  echo: true
   dev: "ragg_png"
-  dpi: 740 
+  dpi: 740
   out.width: "80%"
   fig.width: 6
   fig.asp: 0.618
@@ -30,9 +30,10 @@ book:
     - index.qmd
 
     - part: 提出因果问题
-      chapters: 
+      chapters:
       - chapters/01-casual-to-causal.qmd
-    
+      - chapters/02-whole-game.qmd
+
     - chapters/99-references.qmd
 
 bibliography: citations.bib

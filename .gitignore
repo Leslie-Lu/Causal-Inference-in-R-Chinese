@@ -14,3 +14,4 @@ etc/
 .renv.lock
 
 **/*.quarto_ipynb
+**/*-notes.qmd
