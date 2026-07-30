@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; 全流程：蚊帐与疟疾 – Causal Inference in R 中文版</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/99-references.html" rel="next">
+<link href="../chapters/01-casual-to-causal.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-70b517d90594a4851645b603711cfd4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script defer="" data-domain="r-causal.org" src="https://plausible.io/js/script.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/02-whole-game.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Causal Inference in R 中文版</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">前言</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">提出因果问题</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-casual-to-causal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-whole-game.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">参考文献</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#明确因果问题" id="toc-明确因果问题" class="nav-link active" data-scroll-target="#明确因果问题"><span class="header-section-number">2.1</span> 明确因果问题</a></li>
+  <li><a href="#使用因果图绘制我们的假设" id="toc-使用因果图绘制我们的假设" class="nav-link" data-scroll-target="#使用因果图绘制我们的假设"><span class="header-section-number">2.2</span> 使用因果图绘制我们的假设</a></li>
+  <li><a href="#对假设进行建模" id="toc-对假设进行建模" class="nav-link" data-scroll-target="#对假设进行建模"><span class="header-section-number">2.3</span> 对假设进行建模</a></li>
+  <li><a href="#诊断模型" id="toc-诊断模型" class="nav-link" data-scroll-target="#诊断模型"><span class="header-section-number">2.4</span> 诊断模型</a></li>
+  <li><a href="#估计因果效应" id="toc-估计因果效应" class="nav-link" data-scroll-target="#估计因果效应"><span class="header-section-number">2.5</span> 估计因果效应</a></li>
+  <li><a href="#对效应估计进行敏感性分析" id="toc-对效应估计进行敏感性分析" class="nav-link" data-scroll-target="#对效应估计进行敏感性分析"><span class="header-section-number">2.6</span> 对效应估计进行敏感性分析</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/edit/main/chapters/02-whole-game.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/02-whole-game.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-whole-game" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="cell-output-display">
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>正在进行中 🚧
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>您正在阅读 <em>Causal Inference in R 中文版</em>的第一版草稿。本章节大部分已经完成，但我们可能会进行一些小的调整或文字编辑。</p>
+</div>
+</div>
+</div>
+</div>
+<p>本章将使用本书介绍的技术分析数据。 我们将通过几个关键步骤完成因果分析的<a href="https://www.gse.harvard.edu/news/uk/09/01/education-bat-seven-principles-educators">全流程</a>：</p>
+<ol type="1">
+<li>明确因果问题</li>
+<li>使用因果图绘制我们的假设</li>
+<li>对假设进行建模</li>
+<li>诊断模型</li>
+<li>估计因果效应</li>
+<li>对效应估计进行敏感性分析</li>
+</ol>
+<p>我们将聚焦于每个步骤背后的总体思路，以及这些步骤结合在一起时的样貌；但并不期望你现在就完全消化每一个概念。 本书后续内容将逐一详细讨论这些步骤。</p>
+<section id="明确因果问题" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="明确因果问题"><span class="header-section-number">2.1</span> 明确因果问题</h2>
+<p>在这个引导练习中，我们将尝试回答一个因果问题：使用蚊帐是否会降低感染疟疾的风险？</p>
+<p>疟疾仍是严重的公共卫生问题。 尽管自 2000 年以来疟疾发病率有所下降，但在 2020 年，新冠疫情主要因服务中断而导致病例数和死亡数增加 <span class="citation" data-cites="worldma">(<a href="99-references.html#ref-worldma" role="doc-biblioref"><em>World Malaria Report</em> 2021</a>)</span>。 约 86% 的疟疾死亡发生在 29 个国家。 全部疟疾死亡中近一半仅发生在其中 6 个国家：尼日利亚（27%）、刚果民主共和国（12%）、乌干达（5%）、莫桑比克（4%）、安哥拉（3%）和布基纳法索（3%）。 其中大多数死亡发生在 5 岁以下儿童中 <span class="citation" data-cites="Fink2022">(<a href="99-references.html#ref-Fink2022" role="doc-biblioref">Fink et al. 2022</a>)</span>。 疟疾还会给孕妇带来严重的健康风险，并恶化分娩结局，包括早产和低出生体重。</p>
+<p>蚊帐通过阻挡疟原虫主要宿主蚊子的感染性叮咬，预防疟疾导致的疾病和死亡。 人类自古便开始使用蚊帐。 公元前 5 世纪希腊作家希罗多德在其著作 <em>《历史》</em> 中观察到埃及人将渔网用作蚊帐：</p>
+<blockquote class="blockquote">
+<p>面对数量极多的蚊蚋，他们想出了如下办法：住在沼泽地上方的人受益于高塔；休息时他们登上高塔，因为蚊蚋受风力影响不能飞得太高。住在沼泽地的人则想出了另一种代替高塔的办法：每个人都有一张撒网，白天用它捕鱼，夜晚则把网围在睡觉的床周，钻到网下入睡。若人裹着衣物或亚麻布单睡觉，蚊蚋会透过这些东西叮咬；但隔着网，它们甚至不会尝试叮咬 <span class="citation" data-cites="thehist">(<a href="99-references.html#ref-thehist" role="doc-biblioref">Macaulay 2008</a>)</span>。</p>
+</blockquote>
+<p>许多现代蚊帐还经过杀虫剂处理，这一做法可追溯至第二次世界大战中的俄罗斯士兵 <span class="citation" data-cites="nevill1996">(<a href="99-references.html#ref-nevill1996" role="doc-biblioref">Nevill et al. 1996</a>)</span>；尽管如此，仍有人将其用作渔网 <span class="citation" data-cites="gettleman2015">(<a href="99-references.html#ref-gettleman2015" role="doc-biblioref">Gettleman 2015</a>)</span>。</p>
+<p>我们很容易设想一项处理该问题的随机试验：研究参与者被随机分配使用或不使用蚊帐，并随时间对其进行随访，以观察各组间的疟疾风险是否存在差异。 随机化往往是估计干预措施因果效应的最佳方法，因为它减少了使该估计有效所需的假设数量（我们将在 <span class="quarto-unresolved-ref">?sec-assump</span> 中讨论这些假设）。 特别是，随机化能够很好地处理混杂，即使是我们尚未意识到的混杂因素也可被纳入考虑。</p>
+<p>20 世纪 90 年代的数项里程碑式试验研究了蚊帐使用对疟疾风险的影响。 一项 2004 年的 Meta 分析发现，与不使用蚊帐相比，经杀虫剂处理的蚊帐使儿童死亡率降低 17%，疟原虫流行率降低 13%，非重症和重症疟疾病例减少约 50% <span class="citation" data-cites="lengeler2004">(<a href="99-references.html#ref-lengeler2004" role="doc-biblioref">Lengeler 2004</a>)</span>。 自世界卫生组织开始推荐经杀虫剂处理的蚊帐以来，杀虫剂抗性一直是重大关切。 然而，对这些试验的后续分析发现，抗性尚未影响蚊帐带来的公共卫生获益 <span class="citation" data-cites="pryce2018">(<a href="99-references.html#ref-pryce2018" role="doc-biblioref">Pryce et al. 2018</a>)</span>。</p>
+<p>试验对确定蚊帐项目的经济学效益也产生了重要影响。 例如，一项试验比较了免费发放蚊帐与成本分担项目（参与者以补贴价格购买蚊帐）。 研究作者发现，两组的蚊帐使用率相近，而免费发放蚊帐由于更容易获得，挽救的生命更多，且每挽救一条生命的成本低于成本分担项目 <span class="citation" data-cites="cohen2010">(<a href="99-references.html#ref-cohen2010" role="doc-biblioref">Cohen and Dupas 2010</a>)</span>。</p>
+<p>出于伦理、成本和时间等多种原因，我们可能无法开展新的随机试验来估计蚊帐使用对疟疾风险的影响。 目前已有大量可靠证据支持使用蚊帐，但让我们考虑一些观察性因果推断能够发挥作用的情形。</p>
+<ul>
+<li><p>设想我们正处在尚未开展该主题试验的时期，人们已自行开始为此目的使用蚊帐。 我们的目标或许仍是开展随机试验，但可以用观察数据更快地回答问题。 此外，这项研究的结果可能为试验设计或临时政策建议提供指导。</p></li>
+<li><p>有时，开展试验也并不符合伦理。 疟疾研究中有一个例子源于蚊帐有效性研究：幼儿期控制疟疾是否会延迟对该病的免疫，从而导致日后出现重症疟疾或死亡？ 既然我们现在已知使用蚊帐非常有效，<em>不给予</em> 蚊帐就不符合伦理。 一项近期观察性研究发现，儿童期使用蚊帐对全因死亡率的益处会持续至成年期 <span class="citation" data-cites="Fink2022">(<a href="99-references.html#ref-Fink2022" role="doc-biblioref">Fink et al. 2022</a>)</span>。</p></li>
+<li><p>我们还可能希望估计不同的效应，或估计与既往试验不同人群中的效应。 例如，随机研究和观察性研究均帮助我们更好地理解：只要蚊帐使用率足够高，基于杀虫剂的蚊帐能提高整个社区对疟疾的抵抗力，而不仅限于蚊帐使用者 <span class="citation" data-cites="howard2000 hawley2003">(<a href="99-references.html#ref-howard2000" role="doc-biblioref">Howard et al. 2000</a>; <a href="99-references.html#ref-hawley2003" role="doc-biblioref">Hawley et al. 2003</a>)</span>。</p></li>
+</ul>
+<p>正如我们将在 <span class="quarto-unresolved-ref">?sec-strat-outcome</span> 和 <span class="quarto-unresolved-ref">?sec-g-comp</span> 中看到的，即使能够实施随机化，本书讨论的因果推断技术通常也很有益。</p>
+<p>在开展观察性研究时，思考若有可能我们会实施怎样的随机试验仍然很有帮助。 在这项因果分析中，我们试图模拟的试验称为 <strong>目标试验</strong>。 思考目标试验有助于使因果问题更加精确。 我们将在 <span class="quarto-unresolved-ref">?sec-designs</span> 中更明确地使用这一框架；但现在，让我们考虑先前提出的因果问题：使用蚊帐（mosquito net）是否会降低疟疾风险？ 这个问题相对直观，但仍然模糊。 如 <a href="01-casual-to-causal.html" class="quarto-xref"><span>Chapter 1</span></a> 所示，我们需要明确几个关键方面：</p>
+<ul>
+<li><p><strong>“蚊帐”指什么？</strong> 蚊帐有多种类型：未经处理的蚊帐、经杀虫剂处理的蚊帐，以及较新的长效杀虫剂处理蚊帐。</p></li>
+<li><p><strong>与什么相比的风险？</strong> 例如，我们是在将经杀虫剂处理的蚊帐与<em>不使用</em>蚊帐相比吗？ 与未经处理的蚊帐相比？ 还是将一种新型蚊帐，如长效杀虫剂处理蚊帐，与已在使用的蚊帐相比？</p></li>
+<li><p><strong>风险如何定义？</strong> 某人是否感染疟疾？ 某人是否死于疟疾？</p></li>
+<li><p><strong>谁的风险？</strong> 我们试图将这些知识应用于哪个人群？ 实际上可以将哪些人纳入研究？ 又可能需要排除哪些人？</p></li>
+</ul>
+<p>我们将使用模拟数据回答一个更具体的问题：与不使用蚊帐相比，使用经杀虫剂处理的蚊帐是否会降低 1 年后感染疟疾的风险？ 在这份由 <a href="https://evalsp21.classes.andrewheiss.com/example/matching-ipw/#program-background">Andrew Heiss 博士模拟</a>的数据中：</p>
+<blockquote class="blockquote">
+<p>……研究人员关注使用蚊帐是否能降低个体感染疟疾的风险。 他们收集了一个未具名国家中 1,752 个家庭的数据，其中包括环境因素、个体健康和家庭特征相关变量。 这些数据<strong>不是实验数据</strong>—研究人员无法控制谁使用蚊帐；各个家庭自行决定是否申请免费蚊帐或购买蚊帐，以及在获得蚊帐后是否使用。</p>
+</blockquote>
+<p>由于使用的是模拟数据，我们可以直接获得衡量感染疟疾可能性的结局变量，而现实中我们很可能无法获得这样的变量。 我们将使用这一指标，因为它能让我们更细致地检视实际效应量；而在实践中，我们需要通过其他代理指标来近似效应量，例如对人群进行定期疟疾检测。 由于数据就是如此模拟生成的，我们也可以放心地假设数据集中的人群代表了希望进行推断的人群（该未具名国家）。 模拟数据位于 {<a href="https://github.com/r-causal/causalworkshop">causalworkshop</a>} 包的 <code>net_data</code> 中，包含 10 个变量：</p>
+<!-- (TODO: move this to causaldata?) -->
+<dl>
+<dt><code>id</code></dt>
+<dd>
+<p>ID 变量</p>
+</dd>
+<dt><code>net</code> and <code>net_num</code></dt>
+<dd>
+<p>指示参与者是否使用蚊帐（1 为使用，0 为未使用）的二元变量</p>
+</dd>
+<dt><code>malaria_risk</code></dt>
+<dd>
+<p>范围为 0–100 的疟疾风险量表</p>
+</dd>
+<dt><code>income</code></dt>
+<dd>
+<p>以美元计的周收入</p>
+</dd>
+<dt><code>health</code></dt>
+<dd>
+<p>范围为 0–100 的健康评分量表</p>
+</dd>
+<dt><code>household</code></dt>
+<dd>
+<p>家庭居住人数</p>
+</dd>
+<dt><code>eligible</code></dt>
+<dd>
+<p>指示家庭是否符合免费蚊帐项目资格的二元变量。</p>
+</dd>
+<dt><code>temperature</code></dt>
+<dd>
+<p>以摄氏度计的夜间平均气温</p>
+</dd>
+<dt><code>resistance</code></dt>
+<dd>
+<p>当地蚊虫的杀虫剂抗性。 量表范围为 0–100，数值越高表示抗性越强。</p>
+</dd>
+</dl>
+<p>不同蚊帐使用情况对应的疟疾风险分布看起来差异很大。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(causalworkshop)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>net_data <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(malaria_risk, <span class="at">fill =</span> net)) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-malaria-risk-density" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-malaria-risk-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-malaria-risk-density-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-malaria-risk-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: 使用和未使用蚊帐者的疟疾风险密度图。 使用蚊帐者的疟疾风险更低。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>在 <a href="#fig-malaria-risk-density" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> 中，使用蚊帐者的密度分布位于未使用者的左侧。 疟疾风险的均值差约为 16.4，提示使用蚊帐可能对疟疾具有保护作用。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>net_data <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(net) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">malaria_risk =</span> <span class="fu">mean</span>(malaria_risk))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  net   malaria_risk
+  &lt;lgl&gt;        &lt;dbl&gt;
+1 FALSE         43.9
+2 TRUE          27.5</code></pre>
+</div>
+</div>
+<p>正如预期，简单线性回归也呈现出这一结果。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>net_data <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)     43.9     0.377     116.  0       
+2 netTRUE        -16.4     0.741     -22.1 1.10e-95</code></pre>
+</div>
+</div>
+</section>
+<section id="使用因果图绘制我们的假设" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="使用因果图绘制我们的假设"><span class="header-section-number">2.2</span> 使用因果图绘制我们的假设</h2>
+<p>若尝试将上述简单估计解释为因果估计，我们会面临一个问题：我们观察到的效应可能由其他因素导致。 在此例中，我们将聚焦于混杂：蚊帐使用和疟疾的共同原因会使观察到的效应产生偏倚，除非我们以某种方式对其进行控制。 确定需要控制哪些变量的最佳方法之一是使用因果图。 这类图也称为<strong>因果有向无环图（DAG）</strong>，可视化我们对暴露、结局及其他可能相关变量之间因果关系所作的假设。 重要的是，构建 DAG 并非数据驱动的方法；相反，我们通过关于因果问题结构的专家背景知识来提出 DAG。</p>
+<p>以下是我们为该问题提出的 DAG。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-net-data-dag" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-net-data-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-net-data-dag-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-net-data-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: 蚊帐使用对疟疾影响的拟议因果图。 该有向无环图（DAG）表达了我们的假设：使用蚊帐会降低疟疾风险。 它还表明我们假设：疟疾风险受到蚊帐使用、收入、健康状况、气温和 杀虫剂抗性的影响；蚊帐使用受到收入、健康状况、气温、是否符合免费 蚊帐项目资格以及家庭人数的影响；免费蚊帐项目资格受到收入和家庭人数 的影响；健康状况受到收入的影响。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 中探讨如何创建和分析 DAG。</p>
+<p>在 DAG 中，每个点代表一个变量，每个箭头代表一个原因。 换言之，该图表明了我们认为这些变量之间存在何种因果关系。 在 <a href="#fig-net-data-dag" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> 中，我们的假设是：</p>
+<ul>
+<li>疟疾风险在因果上受到蚊帐使用、收入、健康状况、气温和杀虫剂抗性的影响。</li>
+<li>蚊帐使用在因果上受到收入、健康状况、气温、是否符合免费蚊帐项目资格和家庭人数的影响。</li>
+<li>是否符合免费蚊帐项目资格由收入和家庭人数决定。</li>
+<li>健康状况在因果上受到收入的影响。</li>
+</ul>
+<p>你可能同意或不同意其中某些断言。 这正是好事！ 将假设摆在明面上，使我们能够透明地评估分析的科学可信度。 使用 DAG 的另一个好处是，借助其底层数学，若假设该 DAG 正确，我们可以精确确定需要控制的变量子集。</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>构建 DAG
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在本练习中，我们基于对数据生成方式的了解，为你提供了一个合理的 DAG。 在现实中，建立 DAG 是一项挑战，需要深入思考、领域专业知识，以及（通常还需要）多位专家的协作。</p>
+</div>
+</div>
+<p>我们要处理的主要问题是，分析手头数据时，我们看到的是蚊帐使用对疟疾风险的影响<em>以及所有其他关系的影响</em>。 用 DAG 的术语来说，我们有不止一条开放的因果路径。 若该 DAG 正确，则存在 <em>8</em> 条因果路径：蚊帐使用与疟疾风险之间的路径，以及另外 7 条<em>混杂</em>路径。 蚊帐使用与疟疾风险之间的关联是所有这些路径作用的混合。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-net-data-confounding" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-net-data-confounding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-net-data-confounding-1.png" class="img-fluid figure-img" width="1344">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-net-data-confounding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: 在拟议的 DAG 中，有 8 条开放路径共同促成了朴素回归中观察到的因果 效应：蚊帐使用对疟疾风险的真实效应（绿色）和 7 条其他混杂路径（橙色）。 朴素估计是错误的，因为它混合了所有这些效应。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>当我们计算仅包含蚊帐使用和疟疾风险的朴素线性回归时，观察到的效应是错误的，因为 <a href="#fig-net-data-confounding" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> 中另外 7 条混杂路径对其造成了扭曲。 用 DAG 的术语来说，我们需要<em>阻断</em>这些会扭曲目标因果估计的开放路径。 （可以通过分层、匹配、加权等多种技术阻断路径。 本书将介绍若干方法。） 幸运的是，通过明确 DAG，我们能精确确定需要控制的变量。 对于这个 DAG，我们需要控制 3 个变量：health, income, and temperature。 这 3 个变量构成一个<em>最小调整集</em>，即阻断所有混杂路径所需的最小变量集合（或集合之一）。 我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 中进一步讨论调整集。</p>
+</section>
+<section id="对假设进行建模" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="对假设进行建模"><span class="header-section-number">2.3</span> 对假设进行建模</h2>
+<p>我们将使用一种称为<strong>逆概率加权（IPW）</strong>的技术来控制这些变量，并将在 <span class="quarto-unresolved-ref">?sec-using-ps</span> 中详细讨论该技术。 我们将用逻辑回归基于混杂因素预测接受处理的概率—即倾向评分。 随后，我们将计算逆概率权重，并将其应用于上面拟合的线性回归模型。 倾向评分模型以暴露—蚊帐使用—为因变量，以最小调整集为自变量。</p>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>建模函数形式
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>一般来说，我们希望借助领域专业知识和良好的建模实践来拟合倾向评分模型。 例如，可能希望使用样条函数允许连续混杂因素呈非线性关系，或加入混杂因素之间必要的交互作用。 由于这些是模拟数据，我们知道不需要这些额外参数（因此将跳过它们）；但在实践中，通常需要这样做。 我们将在 <span class="quarto-unresolved-ref">?sec-using-ps</span> 中进一步讨论。</p>
+</div>
+</div>
+<p>倾向评分模型是公式为 <code>net ~ income + health + temperature</code> 的逻辑回归模型，它基于混杂因素收入、健康状况和气温预测蚊帐使用的概率。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> net_data,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the first six propensity scores</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict</span>(propensity_model, <span class="at">type =</span> <span class="st">"response"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     1      2      3      4      5      6 
+0.2464 0.2178 0.3230 0.2307 0.2789 0.3060 </code></pre>
+</div>
+</div>
+<p>我们可以通过多种方式使用倾向评分控制混杂。 在本例中，我们将聚焦于加权。 具体而言，我们将计算<strong>平均处理效应（ATE）</strong>的逆概率权重。 ATE 表示一个特定的因果问题：如果研究中<em>每个人</em>都使用蚊帐，与研究中<em>没有人</em>使用蚊帐相比会怎样？</p>
+<p>为计算 ATE，我们将使用 <code>{broom}</code> 和 <code>{propensity}</code> 包。 <code>broom</code> 的 <code>augment()</code> 函数从模型中提取预测相关信息并将其合并到数据中。 <code>propensity</code> 的 <code>wt_ate()</code> 函数根据倾向评分和暴露计算逆概率权重。</p>
+<p>对于逆概率加权，ATE 权重是实际接受到的处理概率的倒数。 换言之，若使用了蚊帐，ATE 权重就是使用蚊帐概率的倒数；若<em>未</em>使用蚊帐，则为未使用蚊帐概率的倒数。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(propensity)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>net_data_wts <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">augment</span>(<span class="at">data =</span> net_data, <span class="at">type.predict =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># .fitted is the value predicted by the model</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># for a given observation</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, net))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>net_data_wts <span class="sc">|&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(net, .fitted, wts) <span class="sc">|&gt;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  net   .fitted        wts
+  &lt;lgl&gt;   &lt;dbl&gt; &lt;psw{ate}&gt;
+1 FALSE   0.246      1.327
+2 FALSE   0.218      1.279
+3 FALSE   0.323      1.477
+4 FALSE   0.231      1.300
+5 FALSE   0.279      1.387
+6 FALSE   0.306      1.441</code></pre>
+</div>
+</div>
+<p><code>wts</code> 表示每个观测值在即将拟合的结局模型中被上调或下调的程度。 例如，第 16 个家庭使用了蚊帐，其预测概率为 0.41。 鉴于他们实际上使用了蚊帐，这个概率相当低，因此其权重较高，为 2.42。 换言之，相对于上面拟合的朴素线性模型，该家庭将被上调权重。 第一个家庭<em>未</em>使用蚊帐；其预测的蚊帐使用概率为 0.25（换一种说法，预测的<em>未</em>使用蚊帐概率为 0.75）。 这与其观测到的 <code>net</code> 值更一致，但仍存在一定的预测使用蚊帐概率，因此其权重为 1.33。</p>
+</section>
+<section id="诊断模型" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="诊断模型"><span class="header-section-number">2.4</span> 诊断模型</h2>
+<p>倾向评分加权的目标是对观测人群加权，使混杂因素的分布在暴露组之间达到平衡。 换言之，原则上我们是在移除 DAG 中混杂因素与暴露之间的箭头，从而使混杂路径不再扭曲估计结果。 以下是按组展示的倾向评分分布，使用 {<a href="https://github.com/r-causal/halfmoon">halfmoon</a>} 包中用于评估倾向评分模型平衡性的 <code>geom_mirror_histogram()</code> 创建：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(halfmoon)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(net_data_wts, <span class="fu">aes</span>(.fitted)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_mirror_histogram</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> net),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">50</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> abs) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"propensity score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-mirror-histogram-net-data-unweighted" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mirror-histogram-net-data-unweighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-mirror-histogram-net-data-unweighted-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mirror-histogram-net-data-unweighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: 使用蚊帐者（上方、蓝色）与未使用蚊帐者（下方、橙色）的倾向评分镜像直方图。 两组的倾向评分范围相近，未使用蚊帐者略偏左，但分布形状不同。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>加权后的倾向评分创建了一个伪总体，其中的分布更加相似：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(net_data_wts, <span class="fu">aes</span>(.fitted)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_mirror_histogram</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">group =</span> net),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">50</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_mirror_histogram</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> net, <span class="at">weight =</span> wts),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">50</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> abs) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"propensity score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-mirror-histogram-net-data-weighted" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mirror-histogram-net-data-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-mirror-histogram-net-data-weighted-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mirror-histogram-net-data-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.5: 使用蚊帐者（上方、蓝色）与未使用蚊帐者（下方、橙色）的倾向评分镜像直方图。 阴影区域表示未加权分布，颜色较浅的区域表示加权分布。ATE 权重上调各组权重， 使其倾向评分分布的范围和形状更为相似。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>在本例中，未加权分布并不算差—其形状有一定相似性，且重叠较多—但 <a href="#fig-mirror-histogram-net-data-weighted" class="quarto-xref">Figure&nbsp;<span>2.5</span></a> 中的加权分布更为相似。</p>
+<div class="callout callout-style-simple callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>未测量混杂
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>倾向评分加权和大多数其他因果推断技术只能处理<em>已观测到的</em>混杂因素—而且前提是我们对它们进行了正确建模。 遗憾的是，我们仍可能存在未测量混杂，下面将对此进行讨论。</p>
+<p>随机化是一种确实能处理未测量混杂的因果推断技术，这也是它如此强大的原因之一。</p>
+</div>
+</div>
+<p>我们还可能希望了解各混杂因素下的组间平衡程度。 一种方法是计算每个混杂因素加权和未加权时的<strong>标准化均值差（SMD）</strong>。 我们将使用 <code>tidy_smd()</code> 计算 SMD，再使用 <code>geom_love()</code> 绘图；两者均为 halfmoon 的函数。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plot_df <span class="ot">&lt;-</span> <span class="fu">tidy_smd</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  net_data_wts,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(income, health, temperature),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.group =</span> net,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.wts =</span> wts</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  plot_df,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">abs</span>(smd),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> variable,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> method,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> method</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_love</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-love-plot-net-data" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-love-plot-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-love-plot-net-data-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-love-plot-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.6: 展示暴露组间 3 个混杂因素—气温、收入和健康状况—标准化均值差（SMD）的 Love 图。 加权前各组差异显著；加权后，混杂因素在组间的平衡性显著改善。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>一项常见准则是，平衡的混杂因素的绝对 SMD 应小于 0.1。 0.1 只是一条经验法则，但若遵循它，<a href="#fig-love-plot-net-data" class="quarto-xref">Figure&nbsp;<span>2.6</span></a> 中的变量在加权后平衡良好（加权前则不平衡）。</p>
+<p>在将权重应用于结局模型前，让我们检查其总体分布中是否存在极端权重。 极端权重可能使结局模型中的估计和方差不稳定，因此需要留意这一点。 我们还将在 <span class="quarto-unresolved-ref">?sec-estimands</span> 中讨论几种较不易出现此问题的其他权重类型。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>net_data_wts <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(wts)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"#CC79A7"</span>, <span class="at">color =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ate-density-net-data" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ate-density-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-ate-density-net-data-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ate-density-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态，较高数值接近 8。 这可能提示模型存在问题，但权重尚未极端到会使估计方差不稳定。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-ate-density-net-data" class="quarto-xref">Figure&nbsp;<span>2.7</span></a> 中的权重呈偏态，但没有离谱的数值。 若存在极端权重，我们可能会尝试对其进行截尾或稳定化，或考虑计算不同目标估计量对应的效应，这将在 <span class="quarto-unresolved-ref">?sec-estimands</span> 中讨论。 不过，这里看来无需如此。</p>
+</section>
+<section id="估计因果效应" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="估计因果效应"><span class="header-section-number">2.5</span> 估计因果效应</h2>
+<p>现在我们已准备好使用 ATE 权重，在朴素线性回归模型中（尝试）处理混杂。 在本例中，拟合此模型非常简单：拟合与之前相同的模型，但添加 <code>weights = wts</code>，以纳入逆概率权重。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>net_data_wts <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> _, <span class="at">weights =</span> wts) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  term   estimate std.error statistic  p.value conf.low
+  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 (Inte…     42.7     0.442      96.7 0            41.9
+2 netTR…    -12.5     0.624     -20.1 5.50e-81    -13.8
+# ℹ 1 more variable: conf.high &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>平均处理效应的估计为 -12.5 (95% CI -13.8, -11.3)。 遗憾的是，我们所用的置信区间是错误的，因为它们没有考虑估计权重时的不确定性。 一般而言，除非将这种不确定性纳入考虑，倾向评分加权模型的置信区间会过窄。 因此，置信区间的名义覆盖率会不正确（它们并非 95% CI，因为实际覆盖率远低于 95%），并可能导致误解。</p>
+<p>我们有多种方法可以处理这个问题，将在 <span class="quarto-unresolved-ref">?sec-outcome-model</span> 中详细讨论，包括 bootstrap、稳健标准误，以及使用经验三明治估计量手动考虑估计过程。 在本例中，我们将使用 bootstrap，这是一种通过重抽样计算参数分布的灵活工具。 对于许多因果模型，尤其是在问题（特别是标准误）没有闭式解，或希望避免许多此类解所固有的参数假设时，bootstrap 都是有用的工具；有关 bootstrap 的定义和工作方式，请见 <span class="quarto-unresolved-ref">?sec-appendix-bootstrap</span>。 我们将使用 tidymodels 生态系统中的 <code>{rsample}</code> 包处理 bootstrap 样本。</p>
+<p>由于 bootstrap 非常灵活，我们需要仔细思考所计算统计量中的不确定性来源。 人们可能会想编写如下函数来拟合关注的统计量（<code>netTRUE</code> 的点估计）：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>fit_ipw_not_quite_rightly <span class="ot">&lt;-</span> <span class="cf">function</span>(.split, ...) {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get bootstrapped data frame</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  .df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(.split)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit ipw model</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> .df, <span class="at">weights =</span> wts) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>()</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>然而，此函数无法给出正确的置信区间，因为它将逆概率权重视为固定值。 当然它们并非固定值；我们刚刚用逻辑回归估计了它们！ 我们需要通过对<em>整个建模过程</em>进行 bootstrap 来考虑这种不确定性。 对于每个 bootstrap 样本，都需要拟合倾向评分模型、计算逆概率权重，然后拟合加权结局模型。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fit_ipw <span class="ot">&lt;-</span> <span class="cf">function</span>(.split, ...) {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get bootstrapped data frame</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  .df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(.split)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit propensity score model</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  propensity_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    net <span class="sc">~</span> income <span class="sc">+</span> health <span class="sc">+</span> temperature,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> .df,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate inverse probability weights</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  .df <span class="ot">&lt;-</span> propensity_model <span class="sc">|&gt;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">augment</span>(<span class="at">type.predict =</span> <span class="st">"response"</span>, <span class="at">data =</span> .df) <span class="sc">|&gt;</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">wts =</span> <span class="fu">wt_ate</span>(.fitted, net))</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit correctly bootstrapped ipw model</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(malaria_risk <span class="sc">~</span> net, <span class="at">data =</span> .df, <span class="at">weights =</span> wts) <span class="sc">|&gt;</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>()</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>既然已经明确每次迭代如何计算估计值，让我们使用 rsample 的 <code>bootstraps()</code> 函数创建 bootstrap 数据集。 <code>times</code> 参数决定创建多少个 bootstrap 数据集；我们将创建 1,000 个。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>bootstrapped_net_data <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  net_data,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># required to calculate CIs later</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">apparent =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>bootstrapped_net_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Bootstrap sampling with apparent sample 
+# A tibble: 1,001 × 2
+   splits             id           
+   &lt;list&gt;             &lt;chr&gt;        
+ 1 &lt;split [1752/629]&gt; Bootstrap0001
+ 2 &lt;split [1752/622]&gt; Bootstrap0002
+ 3 &lt;split [1752/643]&gt; Bootstrap0003
+ 4 &lt;split [1752/651]&gt; Bootstrap0004
+ 5 &lt;split [1752/654]&gt; Bootstrap0005
+ 6 &lt;split [1752/634]&gt; Bootstrap0006
+ 7 &lt;split [1752/638]&gt; Bootstrap0007
+ 8 &lt;split [1752/651]&gt; Bootstrap0008
+ 9 &lt;split [1752/639]&gt; Bootstrap0009
+10 &lt;split [1752/636]&gt; Bootstrap0010
+# ℹ 991 more rows</code></pre>
+</div>
+</div>
+<p>结果是一个嵌套数据框：每个 <code>splits</code> 对象包含 rsample 用于对 1,000 个样本中的每个 bootstrap 样本进行子集化的元数据。 实际上共有 1,001 行，因为 <code>apparent = TRUE</code> 同时保留原始数据框的副本，这对某些类型的置信区间计算是必需的。 接下来，我们将运行 <code>fit_ipw()</code> 1,001 次，为 <code>estimate</code> 创建一个分布。 这一计算的核心是</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fit_ipw</span>(bootstrapped_net_data<span class="sc">$</span>splits[[n]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>其中 <em>n</em> 是 1,001 个索引之一。 我们将使用 purrr 的 <code>map()</code> 函数遍历每个 <code>split</code> 对象。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ipw_results <span class="ot">&lt;-</span> bootstrapped_net_data <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">boot_fits =</span> <span class="fu">map</span>(splits, fit_ipw))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>ipw_results</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Bootstrap sampling with apparent sample 
+# A tibble: 1,001 × 3
+   splits             id            boot_fits       
+   &lt;list&gt;             &lt;chr&gt;         &lt;list&gt;          
+ 1 &lt;split [1752/629]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
+ 2 &lt;split [1752/622]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
+ 3 &lt;split [1752/643]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
+ 4 &lt;split [1752/651]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
+ 5 &lt;split [1752/654]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
+ 6 &lt;split [1752/634]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
+ 7 &lt;split [1752/638]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
+ 8 &lt;split [1752/651]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
+ 9 &lt;split [1752/639]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
+10 &lt;split [1752/636]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
+# ℹ 991 more rows</code></pre>
+</div>
+</div>
+<p>结果是另一个嵌套数据框，新增了一列 <code>boot_fits</code>。 <code>boot_fits</code> 的每个元素都是对应 bootstrap 数据集的 IPW 结果。 例如，第一个 bootstrap 数据集的 IPW 结果为：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ipw_results<span class="sc">$</span>boot_fits[[<span class="dv">1</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)     42.5     0.429      99.0 0       
+2 netTRUE        -12.8     0.607     -21.1 2.78e-88</code></pre>
+</div>
+</div>
+<p>现在我们得到了一个估计值分布：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ipw_results <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove original data set results</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">!=</span> <span class="st">"Apparent"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> <span class="fu">map_dbl</span>(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>      boot_fits,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># pull the `estimate` for `netTRUE` for each fit</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>      \(.fit) {</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        .fit <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"netTRUE"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>          <span class="fu">pull</span>(estimate)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(estimate)) <span class="sc">+</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"#D55E00FF"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-bootstrap-estimates-net-data" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bootstrap-estimates-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-bootstrap-estimates-net-data-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bootstrap-estimates-net-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.8: “1,000 个蚊帐使用对疟疾风险影响的 bootstrap 估计值直方图。这些估计值的离散程度 考虑了 IPW 权重使用中的依赖性和不确定性。”
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-bootstrap-estimates-net-data" class="quarto-xref">Figure&nbsp;<span>2.8</span></a> 展示了 <code>estimate</code> 的变异情况；现在让我们使用 rsample 的 <code>int_t()</code> 从 bootstrap 分布中计算 95% 置信区间：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>boot_estimate <span class="ot">&lt;-</span> ipw_results <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># calculate T-statistic-based CIs</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">int_t</span>(boot_fits) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"netTRUE"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>boot_estimate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  term    .lower .estimate .upper .alpha .method  
+  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
+1 netTRUE  -13.4     -12.5  -11.7   0.05 student-t</code></pre>
+</div>
+</div>
+<p>现在我们得到了一项经混杂因素调整且具有正确标准误的估计。 在疟疾风险上，<em>所有</em>家庭使用蚊帐与<em>没有</em>家庭使用蚊帐相比的效应估计为 -12.5 (95% CI -13.4, -11.7)。 在这项研究中，蚊帐确实似乎能降低疟疾风险。</p>
+</section>
+<section id="对效应估计进行敏感性分析" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="对效应估计进行敏感性分析"><span class="header-section-number">2.6</span> 对效应估计进行敏感性分析</h2>
+<p>我们已勾勒出一条路线图：获取观察数据，批判性地思考希望提出的因果问题，确定实现目标所需的假设，再将这些假设应用于统计模型。 获得因果问题的正确答案，依赖于我们的假设大致正确。 但如果我们的假设更接近不正确的一端呢？</p>
+<p>剧透预警：刚才计算出的答案是<em>错误的</em>。 在付出这么多努力之后！</p>
+<p>进行因果分析时，使用敏感性分析来检验假设是一个好做法。 任何研究都存在许多潜在偏倚来源，也有多种与之相应的敏感性分析 (<span class="quarto-unresolved-ref">?sec-sensitivity</span>) ；这里我们将聚焦于无混杂这一假设。</p>
+<p>让我们先进行广义敏感性分析，然后再对特定的未测量混杂因素提出问题。 当对未测量混杂因素掌握的信息较少时，可使用临界点分析来询问：需要多大程度的混杂才能使估计值转向零假设？ 换言之，未测量混杂因素需要有多强，才能完全解释掉我们的结果？ <code>{tipr}</code> 包是进行敏感性分析的工具集。 让我们考察一个未知、正态分布混杂因素的临界点。 <code>tip_coef()</code> 函数接受一个估计值（回归模型的 beta 系数，或该系数的上界或下界）。 它还要求提供以下之一：1）暴露组间混杂因素均值的标准化差异，或 2）混杂因素对结局的效应。 对于估计值，我们将使用更接近 0（零假设）的 <code>conf.high</code>，并询问：混杂因素需要在多大程度上影响疟疾风险，才能使无偏的置信区间上限为 0？ 我们将使用 tipr 在 5 种情景下计算这一答案，其中暴露组间混杂因素的均值差分别为 1、2、3、4 或 5。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tipr)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>tipping_points <span class="ot">&lt;-</span> <span class="fu">tip_coef</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  boot_estimate<span class="sc">$</span>.upper,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">exposure_confounder_effect =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>tipping_points <span class="sc">|&gt;</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(confounder_outcome_effect, exposure_confounder_effect)) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#009E73"</span>, <span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">fill =</span> <span class="st">"#009E73"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Confounder-Outcome Effect"</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Scaled mean differences in</span><span class="sc">\n</span><span class="st"> confounder between exposure groups"</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-tip-coef-net" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tip-coef-net-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-tip-coef-net-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tip-coef-net-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.9: 在若干混杂情景下的临界点分析，其中未测量混杂因素是正态分布的连续变量。 曲线表示使因果效应估计的置信区间上限转向 0 所需的混杂强度。x 轴表示经暴露和 已测量混杂因素集调整后的混杂因素–结局关系系数。y 轴表示暴露组间混杂因素的 标准化均值差。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>若存在一个未测量混杂因素，其在暴露组间的标准化均值差为 1，则该混杂因素需要使疟疾风险降低约 -11.7。 相对于其他效应，这相当强，但若我们能想到可能遗漏的因素，它也许是可行的。 反之，假设蚊帐使用与未测量混杂因素之间的关系很强，标准化均值差为 5。 在这种情况下，混杂因素与疟疾之间的关系只需为 -2.3。 现在我们必须考虑：鉴于领域知识以及本分析中观察到的效应，哪些情景是合理的？</p>
+<p>现在让我们考虑一项更具体的敏感性分析。 一些族群，例如富拉尼人，对疟疾具有遗传抗性 <span class="citation" data-cites="arama2015">(<a href="99-references.html#ref-arama2015" role="doc-biblioref">Arama et al. 2015</a>)</span>。 假设在模拟数据中，该未具名国家的一个未具名族群具有这种遗传性疟疾抗性。 出于历史原因，该群体的蚊帐使用率也很高。 <code>net_data</code> 中没有此变量，但假设我们从文献中得知，在这个样本中可以估计：</p>
+<ol type="1">
+<li>具有这种遗传抗性的人，其平均疟疾风险低约 10。</li>
+<li>本研究中使用蚊帐的人约有 26% 具有这种遗传抗性。</li>
+<li>本研究中未使用蚊帐的人约有 5% 具有这种遗传抗性。</li>
+</ol>
+<p>有了这些信息，我们可以使用 tipr 根据未测量混杂因素调整已计算的估计值。 我们将使用 <code>adjust_coef_with_binary()</code> 计算调整后的估计值。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>adjusted_estimates <span class="ot">&lt;-</span> boot_estimate <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.estimate, .lower, .upper) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adjust_coef_with_binary</span>(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">exposed_confounder_prev =</span> <span class="fl">0.26</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">unexposed_confounder_prev =</span> <span class="fl">0.05</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">confounder_outcome_effect =</span> <span class="sc">-</span><span class="dv">10</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>adjusted_estimates</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  effect_adjusted effect_observed
+            &lt;dbl&gt;           &lt;dbl&gt;
+1          -10.4            -12.5
+2          -11.3            -13.4
+3           -9.56           -11.7
+# ℹ 2 more variables:
+#   exposure_confounder_effect &lt;dbl&gt;,
+#   confounder_outcome_effect &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>在遗传性疟疾抗性为混杂因素的情景中，调整后的估计值为 -10.4 (95% CI -11.3, -9.6)。</p>
+<p>事实上，这些数据正是以这样一个混杂因素模拟生成的。 蚊帐使用对疟疾的真实效应约为 -10，而生成这些数据的真实 DAG 为：</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-net-data-true-dag" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-net-data-true-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-whole-game_files/figure-html/fig-net-data-true-dag-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-net-data-true-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.10: <code>net_data</code> 的真实因果图。该 DAG 与我们提出的 DAG 相同，但增加了一项： 遗传性疟疾抗性在因果上降低疟疾风险，并影响蚊帐使用。因此它是一个混杂因素， 也是获得无偏效应估计所需最小调整集的一部分。换言之，未将其纳入时，我们计算 得到了错误的效应。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-net-data-true-dag" class="quarto-xref">Figure&nbsp;<span>2.10</span></a> 中的未测量混杂因素在数据集 <code>net_data_full</code> 中以 <code>genetic_resistance</code> 的形式提供。 若重新计算蚊帐对疟疾风险平均处理效应的 IPW 估计，可得到 -10.2 (95% CI -11.2, -9.3)，这更接近真实答案 -10。</p>
+<p>你怎么看？ 这一估计可靠吗？ 我们是否妥善处理了获得因果效应所需的假设，主要是不存在混杂这一假设？ 你会如何批评这个模型，又会做出哪些不同的处理？ 好吧，由于数据是模拟生成的，我们知道 -10 是正确答案；但在实践中我们永远无法完全确定，因此需要持续检验假设，直至确信它们是稳健的。 我们将在 <span class="quarto-unresolved-ref">?sec-sensitivity</span> 中探讨这些技术及其他方法。 <!-- TODO: Maybe use sickle cell as an example of a precision variable in the variable selection section later in the book. Interesting instance because sickle cell can't be downstream. Consider in the context of over adjustment. --></p>
+<p>为计算该效应，我们：</p>
+<ol type="1">
+<li>明确了因果问题（平均处理效应）</li>
+<li>使用因果图绘制了假设（使用 DAG）</li>
+<li>对假设进行了建模（使用倾向评分加权）</li>
+<li>诊断了模型（检查加权后的混杂因素平衡）</li>
+<li>估计了因果效应（使用逆概率加权）</li>
+<li>对效应估计进行了敏感性分析（使用临界点分析）</li>
+</ol>
+<p>在本书余下部分，我们将在许多领域的案例中遵循这些总体步骤。 我们将更深入地讨论倾向评分技术，探索估计因果效应的其他方法；最重要的是，反复确认我们所作的假设是否合理—即使永远无法完全确定。</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-arama2015" class="csl-entry" role="listitem">
+Arama, Charles, Jeff Skinner, Didier Doumtabe, et al. 2015. <span>“Genetic Resistance to Malaria Is Associated With Greater Enhancement of Immunoglobulin (Ig)M Than IgG Responses to a Broad Array of Plasmodium falciparum Antigens.”</span> <em>Open Forum Infectious Diseases</em> 2 (3): ofv118. <a href="https://doi.org/10.1093/ofid/ofv118">https://doi.org/10.1093/ofid/ofv118</a>.
+</div>
+<div id="ref-cohen2010" class="csl-entry" role="listitem">
+Cohen, Jessica, and Pascaline Dupas. 2010. <span>“Free Distribution or Cost-Sharing? Evidence from a Randomized Malaria Prevention Experiment*.”</span> <em>The Quarterly Journal of Economics</em> 125 (1): 1–45. <a href="https://doi.org/10.1162/qjec.2010.125.1.1">https://doi.org/10.1162/qjec.2010.125.1.1</a>.
+</div>
+<div id="ref-Fink2022" class="csl-entry" role="listitem">
+Fink, Günther, Sigilbert Mrema, Salim Abdulla, et al. 2022. <span>“Mosquito Net Use in Early Childhood and Survival to Adulthood in Tanzania.”</span> <em>New England Journal of Medicine</em> 386 (5): 428–36. <a href="https://doi.org/10.1056/nejmoa2112524">https://doi.org/10.1056/nejmoa2112524</a>.
+</div>
+<div id="ref-gettleman2015" class="csl-entry" role="listitem">
+Gettleman, Jeffrey. 2015. <span>“Meant to Keep Malaria Out, Mosquito Nets Are Used to Haul Fish In.”</span> <em>The New York Times</em>, January 24. <a href="https://www.nytimes.com/2015/01/25/world/africa/mosquito-nets-for-malaria-spawn-new-epidemic-overfishing.html">https://www.nytimes.com/2015/01/25/world/africa/mosquito-nets-for-malaria-spawn-new-epidemic-overfishing.html</a>.
+</div>
+<div id="ref-hawley2003" class="csl-entry" role="listitem">
+Hawley, William A., Penelope A. Phillips-Howard, Feiko O. ter Kuile, et al. 2003. <span>“Community-wide effects of permethrin-treated bed nets on child mortality and malaria morbidity in western Kenya.”</span> <em>The American Journal of Tropical Medicine and Hygiene</em> 68 (4 Suppl): 121–27.
+</div>
+<div id="ref-howard2000" class="csl-entry" role="listitem">
+Howard, S. C., J. Omumbo, C. Nevill, E. S. Some, C. A. Donnelly, and R. W. Snow. 2000. <span>“Evidence for a mass community effect of insecticide-treated bednets on the incidence of malaria on the Kenyan coast.”</span> <em>Transactions of the Royal Society of Tropical Medicine and Hygiene</em> 94 (4): 357–60. <a href="https://doi.org/10.1016/s0035-9203(00)90103-2">https://doi.org/10.1016/s0035-9203(00)90103-2</a>.
+</div>
+<div id="ref-lengeler2004" class="csl-entry" role="listitem">
+Lengeler, C. 2004. <span>“Insecticide-treated bed nets and curtains for preventing malaria.”</span> <em>The Cochrane Database of Systematic Reviews</em>, no. 2: CD000363. <a href="https://doi.org/10.1002/14651858.CD000363.pub2">https://doi.org/10.1002/14651858.CD000363.pub2</a>.
+</div>
+<div id="ref-thehist" class="csl-entry" role="listitem">
+Macaulay, G. C. 2008. <em>The History of <span>Herodotus</span></em>. <a href="https://www.gutenberg.org/files/2707/2707-h/2707-h.htm">https://www.gutenberg.org/files/2707/2707-h/2707-h.htm</a>.
+</div>
+<div id="ref-nevill1996" class="csl-entry" role="listitem">
+Nevill, C. G., E. S. Some, V. O. Mung’ala, et al. 1996. <span>“Insecticide-treated bednets reduce mortality and severe morbidity from malaria among children on the Kenyan coast.”</span> <em>Tropical medicine &amp; international health: TM &amp; IH</em> 1 (2): 139–46. <a href="https://doi.org/10.1111/j.1365-3156.1996.tb00019.x">https://doi.org/10.1111/j.1365-3156.1996.tb00019.x</a>.
+</div>
+<div id="ref-pryce2018" class="csl-entry" role="listitem">
+Pryce, Joseph, Marty Richardson, and Christian Lengeler. 2018. <span>“Insecticide<span>-</span>Treated Nets for Preventing Malaria.”</span> <em>Cochrane Database of Systematic Reviews</em>, no. 11. <a href="https://doi.org/10.1002/14651858.CD000363.pub3">https://doi.org/10.1002/14651858.CD000363.pub3</a>.
+</div>
+<div id="ref-worldma" class="csl-entry" role="listitem">
+<em>World Malaria Report</em>. 2021. <a href="https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2021">https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2021</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/01-casual-to-causal.html" class="pagination-link" aria-label="从随意推断（casual inference）到因果推断（causal inference）">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/99-references.html" class="pagination-link" aria-label="参考文献">
+        <span class="nav-page-text">参考文献</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/edit/main/chapters/02-whole-game.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

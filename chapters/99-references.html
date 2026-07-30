@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -52,17 +55,17 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/01-casual-to-causal.html" rel="prev">
+<link href="../chapters/02-whole-game.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a8845729a8946a96d4688550a3aa9eb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-70b517d90594a4851645b603711cfd4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -153,6 +156,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-whole-game.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -197,11 +206,30 @@ Alsan, Marcella, and Marianne Wanamaker. 2017. <span>“Tuskegee and the
 Health of Black Men*.”</span> <em>The Quarterly Journal of
 Economics</em> 133 (1): 407–55. <a href="https://doi.org/10.1093/qje/qjx029">https://doi.org/10.1093/qje/qjx029</a>.
 </div>
+<div id="ref-arama2015" class="csl-entry" role="listitem">
+Arama, Charles, Jeff Skinner, Didier Doumtabe, et al. 2015.
+<span>“Genetic Resistance to Malaria Is Associated With Greater
+Enhancement of Immunoglobulin (Ig)M Than IgG Responses to a Broad Array
+of Plasmodium falciparum Antigens.”</span> <em>Open Forum Infectious
+Diseases</em> 2 (3): ofv118. <a href="https://doi.org/10.1093/ofid/ofv118">https://doi.org/10.1093/ofid/ofv118</a>.
+</div>
+<div id="ref-cohen2010" class="csl-entry" role="listitem">
+Cohen, Jessica, and Pascaline Dupas. 2010. <span>“Free Distribution or
+Cost-Sharing? Evidence from a Randomized Malaria Prevention
+Experiment*.”</span> <em>The Quarterly Journal of Economics</em> 125
+(1): 1–45. <a href="https://doi.org/10.1162/qjec.2010.125.1.1">https://doi.org/10.1162/qjec.2010.125.1.1</a>.
+</div>
 <div id="ref-Cowger2022" class="csl-entry" role="listitem">
 Cowger, Tori L., Eleanor J. Murray, Jaylen Clarke, et al. 2022.
 <span>“Lifting Universal Masking in Schools <span></span> Covid-19
 Incidence Among Students and Staff.”</span> <em>New England Journal of
 Medicine</em> 387 (21): 1935–46. <a href="https://doi.org/10.1056/nejmoa2211029">https://doi.org/10.1056/nejmoa2211029</a>.
+</div>
+<div id="ref-Fink2022" class="csl-entry" role="listitem">
+Fink, Günther, Sigilbert Mrema, Salim Abdulla, et al. 2022.
+<span>“Mosquito Net Use in Early Childhood and Survival to Adulthood in
+Tanzania.”</span> <em>New England Journal of Medicine</em> 386 (5):
+428–36. <a href="https://doi.org/10.1056/nejmoa2112524">https://doi.org/10.1056/nejmoa2112524</a>.
 </div>
 <div id="ref-Fox2022" class="csl-entry" role="listitem">
 Fox, Matthew P, Eleanor J Murray, Catherine R Lesko, and Shawnita
@@ -215,6 +243,11 @@ Lund, Brian W. Pence, and Whitney R. Robinson. 2020. <span>“Integrating
 Surveillance Data to Estimate Race/Ethnicity-Specific Hysterectomy
 Inequalities Among Reproductive-Aged Women.”</span>
 <em>Epidemiology</em> 31 (3): 385–92. <a href="https://doi.org/10.1097/ede.0000000000001171">https://doi.org/10.1097/ede.0000000000001171</a>.
+</div>
+<div id="ref-gettleman2015" class="csl-entry" role="listitem">
+Gettleman, Jeffrey. 2015. <span>“Meant to Keep Malaria Out, Mosquito
+Nets Are Used to Haul Fish In.”</span> <em>The New York Times</em>,
+January 24. <a href="https://www.nytimes.com/2015/01/25/world/africa/mosquito-nets-for-malaria-spawn-new-epidemic-overfishing.html">https://www.nytimes.com/2015/01/25/world/africa/mosquito-nets-for-malaria-spawn-new-epidemic-overfishing.html</a>.
 </div>
 <div id="ref-godtfredsen2005effect" class="csl-entry" role="listitem">
 Godtfredsen, Nina S, Eva Prescott, and Merete Osler. 2005. <span>“Effect
@@ -241,6 +274,13 @@ al.</span> 2022. <span>“<span class="nocase"><span>C</span>ausal and
 Harrell, Frank E. 2001. <em>Multivariable Modeling Strategies</em>.
 Springer New York. <a href="https://doi.org/10.1007/978-1-4757-3462-1_4">https://doi.org/10.1007/978-1-4757-3462-1_4</a>.
 </div>
+<div id="ref-hawley2003" class="csl-entry" role="listitem">
+Hawley, William A., Penelope A. Phillips-Howard, Feiko O. ter Kuile, et
+al. 2003. <span>“Community-wide effects of permethrin-treated bed nets
+on child mortality and malaria morbidity in western Kenya.”</span>
+<em>The American Journal of Tropical Medicine and Hygiene</em> 68 (4
+Suppl): 121–27.
+</div>
 <div id="ref-Hernan2018" class="csl-entry" role="listitem">
 Hernán, Miguel A. 2018. <span>“The c-Word: Scientific Euphemisms Do Not
 Improve Causal Inference from Observational Data.”</span> <em>American
@@ -250,6 +290,13 @@ Journal of Public Health</em> 108 (5): 616–19. <a href="https://doi.org/10.210
 Hernán, Miguel A., John Hsu, and Brian Healy. 2019. <span>“A Second
 Chance to Get Causal Inference Right: A Classification of Data Science
 Tasks.”</span> <em>CHANCE</em> 32 (1): 42–49. <a href="https://doi.org/10.1080/09332480.2019.1579578">https://doi.org/10.1080/09332480.2019.1579578</a>.
+</div>
+<div id="ref-howard2000" class="csl-entry" role="listitem">
+Howard, S. C., J. Omumbo, C. Nevill, E. S. Some, C. A. Donnelly, and R.
+W. Snow. 2000. <span>“Evidence for a mass community effect of
+insecticide-treated bednets on the incidence of malaria on the Kenyan
+coast.”</span> <em>Transactions of the Royal Society of Tropical
+Medicine and Hygiene</em> 94 (4): 357–60. <a href="https://doi.org/10.1016/s0035-9203(00)90103-2">https://doi.org/10.1016/s0035-9203(00)90103-2</a>.
 </div>
 <div id="ref-James_Witten_Hastie_Tibshirani_2022" class="csl-entry" role="listitem">
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
@@ -264,14 +311,34 @@ Modeling</em>. Springer New York. <a href="https://doi.org/10.1007/978-1-4614-68
 Kuhn, Max, and Julia Silge. 2022. <em>Tidy Modeling with r: A Framework
 for Modeling in the Tidyverse</em>. O’Reilly.
 </div>
+<div id="ref-lengeler2004" class="csl-entry" role="listitem">
+Lengeler, C. 2004. <span>“Insecticide-treated bed nets and curtains for
+preventing malaria.”</span> <em>The Cochrane Database of Systematic
+Reviews</em>, no. 2: CD000363. <a href="https://doi.org/10.1002/14651858.CD000363.pub2">https://doi.org/10.1002/14651858.CD000363.pub2</a>.
+</div>
+<div id="ref-thehist" class="csl-entry" role="listitem">
+Macaulay, G. C. 2008. <em>The History of <span>Herodotus</span></em>. <a href="https://www.gutenberg.org/files/2707/2707-h/2707-h.htm">https://www.gutenberg.org/files/2707/2707-h/2707-h.htm</a>.
+</div>
 <div id="ref-Miller2004" class="csl-entry" role="listitem">
 Miller, William C. 2004. <span>“Prevalence of Chlamydial and Gonococcal
 Infections Among Young Adults in the United States.”</span>
 <em>JAMA</em> 291 (18): 2229. <a href="https://doi.org/10.1001/jama.291.18.2229">https://doi.org/10.1001/jama.291.18.2229</a>.
 </div>
+<div id="ref-nevill1996" class="csl-entry" role="listitem">
+Nevill, C. G., E. S. Some, V. O. Mung’ala, et al. 1996.
+<span>“Insecticide-treated bednets reduce mortality and severe morbidity
+from malaria among children on the Kenyan coast.”</span> <em>Tropical
+medicine &amp; international health: TM &amp; IH</em> 1 (2): 139–46. <a href="https://doi.org/10.1111/j.1365-3156.1996.tb00019.x">https://doi.org/10.1111/j.1365-3156.1996.tb00019.x</a>.
+</div>
 <div id="ref-pearl2018why" class="csl-entry" role="listitem">
 Pearl, J., and D. Mackenzie. 2018. <em>The Book of Why: The New Science
 of Cause and Effect</em>. Penguin Books Limited.
+</div>
+<div id="ref-pryce2018" class="csl-entry" role="listitem">
+Pryce, Joseph, Marty Richardson, and Christian Lengeler. 2018.
+<span>“Insecticide<span>-</span>Treated Nets for Preventing
+Malaria.”</span> <em>Cochrane Database of Systematic Reviews</em>, no.
+11. <a href="https://doi.org/10.1002/14651858.CD000363.pub3">https://doi.org/10.1002/14651858.CD000363.pub3</a>.
 </div>
 <div id="ref-owidforestsanddeforestation" class="csl-entry" role="listitem">
 Ritchie, Hannah, and Max Roser. 2021. <span>“Forests and
@@ -297,6 +364,9 @@ Westreich, D., and S. Greenland. 2013. <span>“The Table 2 Fallacy:
 Presenting and Interpreting Confounder and Modifier
 Coefficients.”</span> <em>American Journal of Epidemiology</em> 177 (4):
 292–98. <a href="https://doi.org/10.1093/aje/kws412">https://doi.org/10.1093/aje/kws412</a>.
+</div>
+<div id="ref-worldma" class="csl-entry" role="listitem">
+<em>World Malaria Report</em>. 2021. <a href="https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2021">https://www.who.int/teams/global-malaria-programme/reports/world-malaria-report-2021</a>.
 </div>
 <div id="ref-Wynants2020" class="csl-entry" role="listitem">
 Wynants, Laure, Ben Van Calster, Gary S Collins, et al. 2020.
@@ -711,8 +781,8 @@ m1328. <a href="https://doi.org/10.1136/bmj.m1328">https://doi.org/10.1136/bmj.m
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/01-casual-to-causal.html" class="pagination-link" aria-label="从随意推断（casual inference）到因果推断（causal inference）">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span>
+      <a href="../chapters/02-whole-game.html" class="pagination-link" aria-label="全流程：蚊帐与疟疾">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
