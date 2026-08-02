@@ -700,16 +700,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 2
    splits             id           
    &lt;list&gt;             &lt;chr&gt;        
- 1 &lt;split [1752/629]&gt; Bootstrap0001
- 2 &lt;split [1752/622]&gt; Bootstrap0002
- 3 &lt;split [1752/643]&gt; Bootstrap0003
- 4 &lt;split [1752/651]&gt; Bootstrap0004
- 5 &lt;split [1752/654]&gt; Bootstrap0005
- 6 &lt;split [1752/634]&gt; Bootstrap0006
- 7 &lt;split [1752/638]&gt; Bootstrap0007
- 8 &lt;split [1752/651]&gt; Bootstrap0008
- 9 &lt;split [1752/639]&gt; Bootstrap0009
-10 &lt;split [1752/636]&gt; Bootstrap0010
+ 1 &lt;split [1752/655]&gt; Bootstrap0001
+ 2 &lt;split [1752/666]&gt; Bootstrap0002
+ 3 &lt;split [1752/645]&gt; Bootstrap0003
+ 4 &lt;split [1752/649]&gt; Bootstrap0004
+ 5 &lt;split [1752/656]&gt; Bootstrap0005
+ 6 &lt;split [1752/653]&gt; Bootstrap0006
+ 7 &lt;split [1752/662]&gt; Bootstrap0007
+ 8 &lt;split [1752/642]&gt; Bootstrap0008
+ 9 &lt;split [1752/657]&gt; Bootstrap0009
+10 &lt;split [1752/640]&gt; Bootstrap0010
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -726,16 +726,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 3
    splits             id            boot_fits       
    &lt;list&gt;             &lt;chr&gt;         &lt;list&gt;          
- 1 &lt;split [1752/629]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
- 2 &lt;split [1752/622]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
- 3 &lt;split [1752/643]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
- 4 &lt;split [1752/651]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
- 5 &lt;split [1752/654]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
- 6 &lt;split [1752/634]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
- 7 &lt;split [1752/638]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
- 8 &lt;split [1752/651]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
- 9 &lt;split [1752/639]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
-10 &lt;split [1752/636]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
+ 1 &lt;split [1752/655]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
+ 2 &lt;split [1752/666]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
+ 3 &lt;split [1752/645]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
+ 4 &lt;split [1752/649]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
+ 5 &lt;split [1752/656]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
+ 6 &lt;split [1752/653]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
+ 7 &lt;split [1752/662]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
+ 8 &lt;split [1752/642]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
+ 9 &lt;split [1752/657]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
+10 &lt;split [1752/640]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -746,8 +746,8 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)     42.5     0.429      99.0 0       
-2 netTRUE        -12.8     0.607     -21.1 2.78e-88</code></pre>
+1 (Intercept)     43.1     0.456      94.7 0       
+2 netTRUE        -12.4     0.643     -19.3 2.28e-75</code></pre>
 </div>
 </div>
 <p>现在我们得到了一个估计值分布：</p>
@@ -793,10 +793,10 @@ Figure&nbsp;2.8: “1,000 个蚊帐使用对疟疾风险影响的 bootstrap 估�
 <pre><code># A tibble: 1 × 6
   term    .lower .estimate .upper .alpha .method  
   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
-1 netTRUE  -13.4     -12.5  -11.7   0.05 student-t</code></pre>
+1 netTRUE  -13.4     -12.6  -11.6   0.05 student-t</code></pre>
 </div>
 </div>
-<p>现在我们得到了一项经混杂因素调整且具有正确标准误的估计。 在疟疾风险上，<em>所有</em>家庭使用蚊帐与<em>没有</em>家庭使用蚊帐相比的效应估计为 -12.5 (95% CI -13.4, -11.7)。 在这项研究中，蚊帐确实似乎能降低疟疾风险。</p>
+<p>现在我们得到了一项经混杂因素调整且具有正确标准误的估计。 在疟疾风险上，<em>所有</em>家庭使用蚊帐与<em>没有</em>家庭使用蚊帐相比的效应估计为 -12.6 (95% CI -13.4, -11.6)。 在这项研究中，蚊帐确实似乎能降低疟疾风险。</p>
 </section>
 <section id="对效应估计进行敏感性分析" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="对效应估计进行敏感性分析"><span class="header-section-number">2.6</span> 对效应估计进行敏感性分析</h2>
@@ -832,7 +832,7 @@ Figure&nbsp;2.9: 在若干混杂情景下的临界点分析，其中未测量混
 </div>
 </div>
 </div>
-<p>若存在一个未测量混杂因素，其在暴露组间的标准化均值差为 1，则该混杂因素需要使疟疾风险降低约 -11.7。 相对于其他效应，这相当强，但若我们能想到可能遗漏的因素，它也许是可行的。 反之，假设蚊帐使用与未测量混杂因素之间的关系很强，标准化均值差为 5。 在这种情况下，混杂因素与疟疾之间的关系只需为 -2.3。 现在我们必须考虑：鉴于领域知识以及本分析中观察到的效应，哪些情景是合理的？</p>
+<p>若存在一个未测量混杂因素，其在暴露组间的标准化均值差为 1，则该混杂因素需要使疟疾风险降低约 -11.6。 相对于其他效应，这相当强，但若我们能想到可能遗漏的因素，它也许是可行的。 反之，假设蚊帐使用与未测量混杂因素之间的关系很强，标准化均值差为 5。 在这种情况下，混杂因素与疟疾之间的关系只需为 -2.3。 现在我们必须考虑：鉴于领域知识以及本分析中观察到的效应，哪些情景是合理的？</p>
 <p>现在让我们考虑一项更具体的敏感性分析。 一些族群，例如富拉尼人，对疟疾具有遗传抗性 <span class="citation" data-cites="arama2015">(<a href="99-references.html#ref-arama2015" role="doc-biblioref">Arama et al. 2015</a>)</span>。 假设在模拟数据中，该未具名国家的一个未具名族群具有这种遗传性疟疾抗性。 出于历史原因，该群体的蚊帐使用率也很高。 <code>net_data</code> 中没有此变量，但假设我们从文献中得知，在这个样本中可以估计：</p>
 <ol type="1">
 <li>具有这种遗传抗性的人，其平均疟疾风险低约 10。</li>
@@ -855,15 +855,15 @@ Figure&nbsp;2.9: 在若干混杂情景下的临界点分析，其中未测量混
 <pre><code># A tibble: 3 × 4
   effect_adjusted effect_observed
             &lt;dbl&gt;           &lt;dbl&gt;
-1          -10.4            -12.5
+1          -10.5            -12.6
 2          -11.3            -13.4
-3           -9.56           -11.7
+3           -9.53           -11.6
 # ℹ 2 more variables:
 #   exposure_confounder_effect &lt;dbl&gt;,
 #   confounder_outcome_effect &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>在遗传性疟疾抗性为混杂因素的情景中，调整后的估计值为 -10.4 (95% CI -11.3, -9.6)。</p>
+<p>在遗传性疟疾抗性为混杂因素的情景中，调整后的估计值为 -10.5 (95% CI -11.3, -9.5)。</p>
 <p>事实上，这些数据正是以这样一个混杂因素模拟生成的。 蚊帐使用对疟疾的真实效应约为 -10，而生成这些数据的真实 DAG 为：</p>
 <div class="cell">
 <div class="cell-output-display">
