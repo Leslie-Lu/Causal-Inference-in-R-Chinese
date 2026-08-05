@@ -810,8 +810,8 @@ bind_rows(
   )
 ```
 
-当然，我们知道当前使用的是真实 DAG。 假设并不知道真实
-DAG (@fig-dag-podcast)， 而是画出了 @fig-dag-podcast-wrong。
+当然，我们知道当前使用的是真实 DAG。 假设并不知道真实 DAG (@fig-dag-podcast)，
+而是画出了 @fig-dag-podcast-wrong。
 
 ```{r}
 #| label: fig-dag-podcast-wrong
