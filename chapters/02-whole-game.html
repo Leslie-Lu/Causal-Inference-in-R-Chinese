@@ -90,7 +90,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/99-references.html" rel="next">
+<link href="../chapters/03-po-counterfactuals.html" rel="next">
 <link href="../chapters/01-casual-to-causal.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -198,6 +198,18 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-po-counterfactuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">潜在结局与反事实</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-dags.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -283,7 +295,7 @@ div.csl-indent {
 <p>面对数量极多的蚊蚋，他们想出了如下办法：住在沼泽地上方的人受益于高塔；休息时他们登上高塔，因为蚊蚋受风力影响不能飞得太高。住在沼泽地的人则想出了另一种代替高塔的办法：每个人都有一张撒网，白天用它捕鱼，夜晚则把网围在睡觉的床周，钻到网下入睡。若人裹着衣物或亚麻布单睡觉，蚊蚋会透过这些东西叮咬；但隔着网，它们甚至不会尝试叮咬 <span class="citation" data-cites="thehist">(<a href="99-references.html#ref-thehist" role="doc-biblioref">Macaulay 2008</a>)</span>。</p>
 </blockquote>
 <p>许多现代蚊帐还经过杀虫剂处理，这一做法可追溯至第二次世界大战中的俄罗斯士兵 <span class="citation" data-cites="nevill1996">(<a href="99-references.html#ref-nevill1996" role="doc-biblioref">Nevill et al. 1996</a>)</span>；尽管如此，仍有人将其用作渔网 <span class="citation" data-cites="gettleman2015">(<a href="99-references.html#ref-gettleman2015" role="doc-biblioref">Gettleman 2015</a>)</span>。</p>
-<p>我们很容易设想一项处理该问题的随机试验：研究参与者被随机分配使用或不使用蚊帐，并随时间对其进行随访，以观察各组间的疟疾风险是否存在差异。 随机化往往是估计干预措施因果效应的最佳方法，因为它减少了使该估计有效所需的假设数量（我们将在 <span class="quarto-unresolved-ref">?sec-assump</span> 中讨论这些假设）。 特别是，随机化能够很好地处理混杂，即使是我们尚未意识到的混杂因素也可被纳入考虑。</p>
+<p>我们很容易设想一项处理该问题的随机试验：研究参与者被随机分配使用或不使用蚊帐，并随时间对其进行随访，以观察各组间的疟疾风险是否存在差异。 随机化往往是估计干预措施因果效应的最佳方法，因为它减少了使该估计有效所需的假设数量（我们将在 <a href="03-po-counterfactuals.html#sec-assump" class="quarto-xref"><span>Section 3.2</span></a> 中讨论这些假设）。 特别是，随机化能够很好地处理混杂，即使是我们尚未意识到的混杂因素也可被纳入考虑。</p>
 <p>20 世纪 90 年代的数项里程碑式试验研究了蚊帐使用对疟疾风险的影响。 一项 2004 年的 Meta 分析发现，与不使用蚊帐相比，经杀虫剂处理的蚊帐使儿童死亡率降低 17%，疟原虫流行率降低 13%，非重症和重症疟疾病例减少约 50% <span class="citation" data-cites="lengeler2004">(<a href="99-references.html#ref-lengeler2004" role="doc-biblioref">Lengeler 2004</a>)</span>。 自世界卫生组织开始推荐经杀虫剂处理的蚊帐以来，杀虫剂抗性一直是重大关切。 然而，对这些试验的后续分析发现，抗性尚未影响蚊帐带来的公共卫生获益 <span class="citation" data-cites="pryce2018">(<a href="99-references.html#ref-pryce2018" role="doc-biblioref">Pryce et al. 2018</a>)</span>。</p>
 <p>试验对确定蚊帐项目的经济学效益也产生了重要影响。 例如，一项试验比较了免费发放蚊帐与成本分担项目（参与者以补贴价格购买蚊帐）。 研究作者发现，两组的蚊帐使用率相近，而免费发放蚊帐由于更容易获得，挽救的生命更多，且每挽救一条生命的成本低于成本分担项目 <span class="citation" data-cites="cohen2010">(<a href="99-references.html#ref-cohen2010" role="doc-biblioref">Cohen and Dupas 2010</a>)</span>。</p>
 <p>出于伦理、成本和时间等多种原因，我们可能无法开展新的随机试验来估计蚊帐使用对疟疾风险的影响。 目前已有大量可靠证据支持使用蚊帐，但让我们考虑一些观察性因果推断能够发挥作用的情形。</p>
@@ -293,7 +305,7 @@ div.csl-indent {
 <li><p>我们还可能希望估计不同的效应，或估计与既往试验不同人群中的效应。 例如，随机研究和观察性研究均帮助我们更好地理解：只要蚊帐使用率足够高，基于杀虫剂的蚊帐能提高整个社区对疟疾的抵抗力，而不仅限于蚊帐使用者 <span class="citation" data-cites="howard2000 hawley2003">(<a href="99-references.html#ref-howard2000" role="doc-biblioref">Howard et al. 2000</a>; <a href="99-references.html#ref-hawley2003" role="doc-biblioref">Hawley et al. 2003</a>)</span>。</p></li>
 </ul>
 <p>正如我们将在 <span class="quarto-unresolved-ref">?sec-strat-outcome</span> 和 <span class="quarto-unresolved-ref">?sec-g-comp</span> 中看到的，即使能够实施随机化，本书讨论的因果推断技术通常也很有益。</p>
-<p>在开展观察性研究时，思考若有可能我们会实施怎样的随机试验仍然很有帮助。 在这项因果分析中，我们试图模拟的试验称为 <strong>目标试验</strong>。 思考目标试验有助于使因果问题更加精确。 我们将在 <span class="quarto-unresolved-ref">?sec-designs</span> 中更明确地使用这一框架；但现在，让我们考虑先前提出的因果问题：使用蚊帐（mosquito net）是否会降低疟疾风险？ 这个问题相对直观，但仍然模糊。 如 <a href="01-casual-to-causal.html" class="quarto-xref"><span>Chapter 1</span></a> 所示，我们需要明确几个关键方面：</p>
+<p>在开展观察性研究时，思考若有可能我们会实施怎样的随机试验仍然很有帮助。 在这项因果分析中，我们试图模拟的试验称为 <strong>目标试验</strong>。 思考目标试验有助于使因果问题更加精确。 我们将在 <a href="03-po-counterfactuals.html#sec-designs" class="quarto-xref"><span>Section 3.3</span></a> 中更明确地使用这一框架；但现在，让我们考虑先前提出的因果问题：使用蚊帐（mosquito net）是否会降低疟疾风险？ 这个问题相对直观，但仍然模糊。 如 <a href="01-casual-to-causal.html" class="quarto-xref"><span>Chapter 1</span></a> 所示，我们需要明确几个关键方面：</p>
 <ul>
 <li><p><strong>“蚊帐”指什么？</strong> 蚊帐有多种类型：未经处理的蚊帐、经杀虫剂处理的蚊帐，以及较新的长效杀虫剂处理蚊帐。</p></li>
 <li><p><strong>与什么相比的风险？</strong> 例如，我们是在将经杀虫剂处理的蚊帐与<em>不使用</em>蚊帐相比吗？ 与未经处理的蚊帐相比？ 还是将一种新型蚊帐，如长效杀虫剂处理蚊帐，与已在使用的蚊帐相比？</p></li>
@@ -410,7 +422,7 @@ Figure&nbsp;2.2: 蚊帐使用对疟疾影响的拟议因果图。 该有向无�
 </div>
 </div>
 </div>
-<p>我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 中探讨如何创建和分析 DAG。</p>
+<p>我们将在 <a href="04-dags.html" class="quarto-xref"><span>Chapter 4</span></a> 中探讨如何创建和分析 DAG。</p>
 <p>在 DAG 中，每个点代表一个变量，每个箭头代表一个原因。 换言之，该图表明了我们认为这些变量之间存在何种因果关系。 在 <a href="#fig-net-data-dag" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> 中，我们的假设是：</p>
 <ul>
 <li>疟疾风险在因果上受到蚊帐使用、收入、健康状况、气温和杀虫剂抗性的影响。</li>
@@ -447,7 +459,7 @@ Figure&nbsp;2.3: 在拟议的 DAG 中，有 8 条开放路径共同促成了朴�
 </div>
 </div>
 </div>
-<p>当我们计算仅包含蚊帐使用和疟疾风险的朴素线性回归时，观察到的效应是错误的，因为 <a href="#fig-net-data-confounding" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> 中另外 7 条混杂路径对其造成了扭曲。 用 DAG 的术语来说，我们需要<em>阻断</em>这些会扭曲目标因果估计的开放路径。 （可以通过分层、匹配、加权等多种技术阻断路径。 本书将介绍若干方法。） 幸运的是，通过明确 DAG，我们能精确确定需要控制的变量。 对于这个 DAG，我们需要控制 3 个变量：health, income, and temperature。 这 3 个变量构成一个<em>最小调整集</em>，即阻断所有混杂路径所需的最小变量集合（或集合之一）。 我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 中进一步讨论调整集。</p>
+<p>当我们计算仅包含蚊帐使用和疟疾风险的朴素线性回归时，观察到的效应是错误的，因为 <a href="#fig-net-data-confounding" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> 中另外 7 条混杂路径对其造成了扭曲。 用 DAG 的术语来说，我们需要<em>阻断</em>这些会扭曲目标因果估计的开放路径。 （可以通过分层、匹配、加权等多种技术阻断路径。 本书将介绍若干方法。） 幸运的是，通过明确 DAG，我们能精确确定需要控制的变量。 对于这个 DAG，我们需要控制 3 个变量：health, income, and temperature。 这 3 个变量构成一个<em>最小调整集</em>，即阻断所有混杂路径所需的最小变量集合（或集合之一）。 我们将在 <a href="04-dags.html" class="quarto-xref"><span>Chapter 4</span></a> 中进一步讨论调整集。</p>
 </section>
 <section id="对假设进行建模" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="对假设进行建模"><span class="header-section-number">2.3</span> 对假设进行建模</h2>
@@ -700,16 +712,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 2
    splits             id           
    &lt;list&gt;             &lt;chr&gt;        
- 1 &lt;split [1752/655]&gt; Bootstrap0001
- 2 &lt;split [1752/666]&gt; Bootstrap0002
- 3 &lt;split [1752/645]&gt; Bootstrap0003
- 4 &lt;split [1752/649]&gt; Bootstrap0004
- 5 &lt;split [1752/656]&gt; Bootstrap0005
- 6 &lt;split [1752/653]&gt; Bootstrap0006
- 7 &lt;split [1752/662]&gt; Bootstrap0007
- 8 &lt;split [1752/642]&gt; Bootstrap0008
- 9 &lt;split [1752/657]&gt; Bootstrap0009
-10 &lt;split [1752/640]&gt; Bootstrap0010
+ 1 &lt;split [1752/645]&gt; Bootstrap0001
+ 2 &lt;split [1752/647]&gt; Bootstrap0002
+ 3 &lt;split [1752/642]&gt; Bootstrap0003
+ 4 &lt;split [1752/645]&gt; Bootstrap0004
+ 5 &lt;split [1752/640]&gt; Bootstrap0005
+ 6 &lt;split [1752/654]&gt; Bootstrap0006
+ 7 &lt;split [1752/644]&gt; Bootstrap0007
+ 8 &lt;split [1752/664]&gt; Bootstrap0008
+ 9 &lt;split [1752/654]&gt; Bootstrap0009
+10 &lt;split [1752/637]&gt; Bootstrap0010
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -726,16 +738,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 3
    splits             id            boot_fits       
    &lt;list&gt;             &lt;chr&gt;         &lt;list&gt;          
- 1 &lt;split [1752/655]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
- 2 &lt;split [1752/666]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
- 3 &lt;split [1752/645]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
- 4 &lt;split [1752/649]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
- 5 &lt;split [1752/656]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
- 6 &lt;split [1752/653]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
- 7 &lt;split [1752/662]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
- 8 &lt;split [1752/642]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
- 9 &lt;split [1752/657]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
-10 &lt;split [1752/640]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
+ 1 &lt;split [1752/645]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
+ 2 &lt;split [1752/647]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
+ 3 &lt;split [1752/642]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
+ 4 &lt;split [1752/645]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
+ 5 &lt;split [1752/640]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
+ 6 &lt;split [1752/654]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
+ 7 &lt;split [1752/644]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
+ 8 &lt;split [1752/664]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
+ 9 &lt;split [1752/654]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
+10 &lt;split [1752/637]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -746,8 +758,8 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)     43.1     0.456      94.7 0       
-2 netTRUE        -12.4     0.643     -19.3 2.28e-75</code></pre>
+1 (Intercept)     43.1     0.446      96.7 0       
+2 netTRUE        -13.3     0.630     -21.1 6.23e-88</code></pre>
 </div>
 </div>
 <p>现在我们得到了一个估计值分布：</p>
@@ -793,10 +805,10 @@ Figure&nbsp;2.8: “1,000 个蚊帐使用对疟疾风险影响的 bootstrap 估�
 <pre><code># A tibble: 1 × 6
   term    .lower .estimate .upper .alpha .method  
   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    
-1 netTRUE  -13.4     -12.6  -11.6   0.05 student-t</code></pre>
+1 netTRUE  -13.4     -12.5  -11.7   0.05 student-t</code></pre>
 </div>
 </div>
-<p>现在我们得到了一项经混杂因素调整且具有正确标准误的估计。 在疟疾风险上，<em>所有</em>家庭使用蚊帐与<em>没有</em>家庭使用蚊帐相比的效应估计为 -12.6 (95% CI -13.4, -11.6)。 在这项研究中，蚊帐确实似乎能降低疟疾风险。</p>
+<p>现在我们得到了一项经混杂因素调整且具有正确标准误的估计。 在疟疾风险上，<em>所有</em>家庭使用蚊帐与<em>没有</em>家庭使用蚊帐相比的效应估计为 -12.5 (95% CI -13.4, -11.7)。 在这项研究中，蚊帐确实似乎能降低疟疾风险。</p>
 </section>
 <section id="对效应估计进行敏感性分析" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="对效应估计进行敏感性分析"><span class="header-section-number">2.6</span> 对效应估计进行敏感性分析</h2>
@@ -832,7 +844,7 @@ Figure&nbsp;2.9: 在若干混杂情景下的临界点分析，其中未测量混
 </div>
 </div>
 </div>
-<p>若存在一个未测量混杂因素，其在暴露组间的标准化均值差为 1，则该混杂因素需要使疟疾风险降低约 -11.6。 相对于其他效应，这相当强，但若我们能想到可能遗漏的因素，它也许是可行的。 反之，假设蚊帐使用与未测量混杂因素之间的关系很强，标准化均值差为 5。 在这种情况下，混杂因素与疟疾之间的关系只需为 -2.3。 现在我们必须考虑：鉴于领域知识以及本分析中观察到的效应，哪些情景是合理的？</p>
+<p>若存在一个未测量混杂因素，其在暴露组间的标准化均值差为 1，则该混杂因素需要使疟疾风险降低约 -11.7。 相对于其他效应，这相当强，但若我们能想到可能遗漏的因素，它也许是可行的。 反之，假设蚊帐使用与未测量混杂因素之间的关系很强，标准化均值差为 5。 在这种情况下，混杂因素与疟疾之间的关系只需为 -2.3。 现在我们必须考虑：鉴于领域知识以及本分析中观察到的效应，哪些情景是合理的？</p>
 <p>现在让我们考虑一项更具体的敏感性分析。 一些族群，例如富拉尼人，对疟疾具有遗传抗性 <span class="citation" data-cites="arama2015">(<a href="99-references.html#ref-arama2015" role="doc-biblioref">Arama et al. 2015</a>)</span>。 假设在模拟数据中，该未具名国家的一个未具名族群具有这种遗传性疟疾抗性。 出于历史原因，该群体的蚊帐使用率也很高。 <code>net_data</code> 中没有此变量，但假设我们从文献中得知，在这个样本中可以估计：</p>
 <ol type="1">
 <li>具有这种遗传抗性的人，其平均疟疾风险低约 10。</li>
@@ -855,15 +867,15 @@ Figure&nbsp;2.9: 在若干混杂情景下的临界点分析，其中未测量混
 <pre><code># A tibble: 3 × 4
   effect_adjusted effect_observed
             &lt;dbl&gt;           &lt;dbl&gt;
-1          -10.5            -12.6
+1          -10.4            -12.5
 2          -11.3            -13.4
-3           -9.53           -11.6
+3           -9.60           -11.7
 # ℹ 2 more variables:
 #   exposure_confounder_effect &lt;dbl&gt;,
 #   confounder_outcome_effect &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>在遗传性疟疾抗性为混杂因素的情景中，调整后的估计值为 -10.5 (95% CI -11.3, -9.5)。</p>
+<p>在遗传性疟疾抗性为混杂因素的情景中，调整后的估计值为 -10.4 (95% CI -11.3, -9.6)。</p>
 <p>事实上，这些数据正是以这样一个混杂因素模拟生成的。 蚊帐使用对疟疾的真实效应约为 -10，而生成这些数据的真实 DAG 为：</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -1338,8 +1350,8 @@ Pryce, Joseph, Marty Richardson, and Christian Lengeler. 2018. <span>“Insectic
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/99-references.html" class="pagination-link" aria-label="参考文献">
-        <span class="nav-page-text">参考文献</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/03-po-counterfactuals.html" class="pagination-link" aria-label="潜在结局与反事实">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">潜在结局与反事实</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

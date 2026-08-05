@@ -163,6 +163,18 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-po-counterfactuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">潜在结局与反事实</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-dags.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -332,14 +344,14 @@ Figure&nbsp;1.2: 2020 年超额死亡人数与历史上所有原因预期死亡�
 <section id="与因果推断的关系-1" class="level4" data-number="1.2.2.3">
 <h4 data-number="1.2.2.3" class="anchored" data-anchor-id="与因果推断的关系-1"><span class="header-section-number">1.2.2.3</span> 与因果推断的关系</h4>
 <p>预测中最大的单一风险，是假定模型中的某个系数具有因果解释。这种假定很可能不成立。一个模型可能预测得很好，但从因果角度看，它的系数也可能完全有偏。我们将在 <a href="#sec-pred-or-explain" class="quarto-xref"><span>Section 1.2.5</span></a> 和本书其余部分进一步讨论这一点。</p>
-<p>人们常常错误地把用于预测模型的特征（变量）选择方法，用来选择因果模型中的混杂因素。除了这些方法存在过拟合风险之外，它们适用于预测模型，却不适用于因果模型。预测指标无法确定你的问题的因果结构，而某个变量对结局具有预测价值，也并不使它成为混杂因素。一般来说，应当由背景知识（而不是预测或关联统计）来帮助你为因果模型选择变量 <span class="citation" data-cites="robinsImpossible">(<a href="99-references.html#ref-robinsImpossible" role="doc-biblioref">Robins and Wasserman 1999</a>)</span>；我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 和 <span class="quarto-unresolved-ref">?sec-building-models</span> 中详细讨论这一过程。</p>
-<p>尽管如此，预测对因果推断依然至关重要。从哲学角度看，我们是在比较不同<em>如果……会怎样</em>情景下的预测：如果一件事发生，结局会是什么；如果另一件事发生，结局又会是什么？我们会花大量时间讨论这个主题，尤其是在 <span class="quarto-unresolved-ref">?sec-counterfactuals</span> 中。我们还会从实践角度大量讨论预测：就像在预测以及某些描述任务中一样，我们会使用建模技术来回答因果问题。倾向评分方法和 g-计算等技术使用模型预测来回答因果问题，但建立和解释这些模型本身的工作流非常不同。</p>
+<p>人们常常错误地把用于预测模型的特征（变量）选择方法，用来选择因果模型中的混杂因素。除了这些方法存在过拟合风险之外，它们适用于预测模型，却不适用于因果模型。预测指标无法确定你的问题的因果结构，而某个变量对结局具有预测价值，也并不使它成为混杂因素。一般来说，应当由背景知识（而不是预测或关联统计）来帮助你为因果模型选择变量 <span class="citation" data-cites="robinsImpossible">(<a href="99-references.html#ref-robinsImpossible" role="doc-biblioref">Robins and Wasserman 1999</a>)</span>；我们将在 <a href="04-dags.html" class="quarto-xref">Chapter&nbsp;<span>4</span></a> 和 <span class="quarto-unresolved-ref">?sec-building-models</span> 中详细讨论这一过程。</p>
+<p>尽管如此，预测对因果推断依然至关重要。从哲学角度看，我们是在比较不同<em>如果……会怎样</em>情景下的预测：如果一件事发生，结局会是什么；如果另一件事发生，结局又会是什么？我们会花大量时间讨论这个主题，尤其是在 <a href="03-po-counterfactuals.html" class="quarto-xref">Chapter&nbsp;<span>3</span></a> 中。我们还会从实践角度大量讨论预测：就像在预测以及某些描述任务中一样，我们会使用建模技术来回答因果问题。倾向评分方法和 g-计算等技术使用模型预测来回答因果问题，但建立和解释这些模型本身的工作流非常不同。</p>
 </section>
 </section>
 <section id="因果推断" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="因果推断"><span class="header-section-number">1.2.3</span> 因果推断</h3>
 <p>因果推断的目标，是理解某个变量（有时称为暴露）对另一个变量（有时称为结局）的影响。“暴露”和”结局”是本书用来描述我们感兴趣的因果关系的术语。重要的是，我们的目标是清楚而精确地回答这个问题。在实践中，这意味着使用研究设计（例如随机试验）或统计方法（例如倾向评分）来计算暴露对结局的无偏效应。</p>
-<p>与预测和描述一样，最好从一个清楚、精确的问题开始，这样才能得到清楚、精确的答案。在统计学和数据科学中，尤其是当我们在现代世界的数据海洋中穿行时，我们常常最终得到一个没有问题的答案（例如 <a href="https://en.wikipedia.org/wiki/42_(number)#The_Hitchhiker's_Guide_to_the_Galaxy"><code>42</code></a>）。当然，这会使答案的解释变得困难。在 <a href="#sec-diag" class="quarto-xref"><span>Section 1.3</span></a> 中，我们将讨论因果问题的结构。我们将在 <span class="quarto-unresolved-ref">?sec-counterfactuals</span> 中讨论从哲学和实践层面锤炼问题的方法。</p>
+<p>与预测和描述一样，最好从一个清楚、精确的问题开始，这样才能得到清楚、精确的答案。在统计学和数据科学中，尤其是当我们在现代世界的数据海洋中穿行时，我们常常最终得到一个没有问题的答案（例如 <a href="https://en.wikipedia.org/wiki/42_(number)#The_Hitchhiker's_Guide_to_the_Galaxy"><code>42</code></a>）。当然，这会使答案的解释变得困难。在 <a href="#sec-diag" class="quarto-xref"><span>Section 1.3</span></a> 中，我们将讨论因果问题的结构。我们将在 <a href="03-po-counterfactuals.html" class="quarto-xref">Chapter&nbsp;<span>3</span></a> 中讨论从哲学和实践层面锤炼问题的方法。</p>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -366,7 +378,7 @@ Figure&nbsp;1.2: 2020 年超额死亡人数与历史上所有原因预期死亡�
 </ul>
 <section id="有效性-2" class="level4" data-number="1.2.4.1">
 <h4 data-number="1.2.4.1" class="anchored" data-anchor-id="有效性-2"><span class="header-section-number">1.2.4.1</span> 有效性</h4>
-<p>作出有效的因果推断需要若干假设，我们将在 <span class="quarto-unresolved-ref">?sec-assump</span> 中讨论。不同于预测，我们通常无法确认自己的因果模型是否正确。换句话说，我们需要作出的大多数假设都是不可验证的。我们将在本书中反复回到这一主题——从这些假设的基础，到实践决策，再到检查模型中的问题。</p>
+<p>作出有效的因果推断需要若干假设，我们将在 <a href="03-po-counterfactuals.html#sec-assump" class="quarto-xref"><span>Section 3.2</span></a> 中讨论。不同于预测，我们通常无法确认自己的因果模型是否正确。换句话说，我们需要作出的大多数假设都是不可验证的。我们将在本书中反复回到这一主题——从这些假设的基础，到实践决策，再到检查模型中的问题。</p>
 </section>
 </section>
 <section id="sec-pred-or-explain" class="level3" data-number="1.2.5">
@@ -375,7 +387,7 @@ Figure&nbsp;1.2: 2020 年超额死亡人数与历史上所有原因预期死亡�
 <p>我们先从因果视角看，因为它稍微简单一些。设想一个针对某个暴露的因果无偏模型，它只包含同时与结局<em>和</em>暴露相关的变量。换句话说，这个模型为我们感兴趣的暴露提供了正确答案，但并不包含结局的其他预测因子（有时这可能是个好主意，正如 <span class="quarto-unresolved-ref">?sec-strat-outcome</span> 中所讨论的）。如果一个结局有许多原因，那么一个准确描述其与单一暴露关系的模型，很可能无法很好地预测该结局。同样，如果暴露对结局的真实因果效应很小，它带来的预测价值也很有限。换句话说，一个模型的预测能力无论高低，都无法帮助我们区分该模型是否给出了正确答案。当然，低预测能力也可能表明某个因果效应从应用角度看并没有太大用处，尽管这还取决于若干统计因素。</p>
 <p>预测模型并不总是无偏因果模型，还有两个更复杂的原因。第一个原因，我们考虑一个从因果角度看准确的模型：它估计对某个结局的效应，而且所有这些效应都是无偏的。即使在这种理想情形下，你也可能用另一个模型得到更好的预测。原因与预测建模中的偏差-方差权衡有关。当效应很小、数据噪声很大、预测因子高度相关，或数据量不多时，使用带有偏倚的模型（如惩罚回归）可能是有道理的。这些模型有意引入偏倚，以换取样本外预测中方差的改善。由于预测和因果推断的目标不同（通常是对样本外观察进行准确预测，而不是估计无偏效应），最适合推断的模型不一定是最好的预测模型。</p>
 <!-- TODO: maybe include a simulation to prove it? -->
-<p>第二，从因果角度看有偏的变量，往往也会带来预测能力。我们将在 <span class="quarto-unresolved-ref">?sec-dags</span> 中讨论哪些变量应当纳入模型、哪些变量<em>不应</em>纳入模型，但先看一个简单例子。一个著名的混杂关系例子，是夏季冰淇淋销量与犯罪之间的关系。<a href="https://slate.com/news-and-politics/2013/07/warm-weather-homicide-rates-when-ice-cream-sales-rise-homicides-rise-coincidence.html">从描述上看，冰淇淋销量与犯罪有关</a>，但这种关系受到天气混杂；例如，天气较暖时，冰淇淋销量和犯罪都会增加。（当然，这是简化说法，因为天气本身并不导致犯罪，但它位于因果路径上。）</p>
+<p>第二，从因果角度看有偏的变量，往往也会带来预测能力。我们将在 <a href="04-dags.html" class="quarto-xref"><span>Chapter 4</span></a> 中讨论哪些变量应当纳入模型、哪些变量<em>不应</em>纳入模型，但先看一个简单例子。一个著名的混杂关系例子，是夏季冰淇淋销量与犯罪之间的关系。<a href="https://slate.com/news-and-politics/2013/07/warm-weather-homicide-rates-when-ice-cream-sales-rise-homicides-rise-coincidence.html">从描述上看，冰淇淋销量与犯罪有关</a>，但这种关系受到天气混杂；例如，天气较暖时，冰淇淋销量和犯罪都会增加。（当然，这是简化说法，因为天气本身并不导致犯罪，但它位于因果路径上。）</p>
 <p>考虑一个思想实验：你身处一个黑暗房间。你的目标是预测犯罪，但你不知道天气或一年中的时间。不过，你有冰淇淋销量的信息。一个用冰淇淋销量预测犯罪的模型，从因果角度看会是有偏的——冰淇淋销量并不导致犯罪，即使模型会显示出一个效应——但它会为你的犯罪模型提供一些预测价值。这两个条件背后的原因相同：天气和冰淇淋销量相关，天气和犯罪也相关。冰淇淋销量可以成功地（尽管并不完美地）作为天气的代理。这会导致对冰淇淋销量对犯罪的因果影响的效应估计有偏，但也会部分有效地预测犯罪。其他从因果角度看无效的变量，无论是自身有偏，还是会把偏倚引入因果效应估计，也常常带来良好的预测价值。因此，预测准确性并不是衡量因果性的好指标。</p>
 <p>一个密切相关的概念是 <em>Table Two Fallacy</em>，之所以这样命名，是因为在健康研究论文中，描述性分析通常呈现在表 1，而回归模型通常呈现在表 2 <span class="citation" data-cites="Westreich2013">(<a href="99-references.html#ref-Westreich2013" role="doc-biblioref">Westreich and Greenland 2013</a>)</span>。Table Two Fallacy 指的是研究者呈现混杂因素和其他非暴露变量，尤其是当他们把这些系数也解释为因果效应时。问题在于，在某些情况下，用于估计某个变量无偏效应的模型，可能并不是用于估计另一个变量无偏效应的同一个模型。换句话说，我们不能把混杂因素的效应解释为因果效应，因为它们<em>自身</em>也可能被另一个与原始暴露无关的变量所混杂。</p>
 <p>描述性、预测性和因果性分析总会相互包含一些成分。预测模型的一部分预测能力来自结局的因果结构，而因果模型也因为包含关于结局的信息而具有一定预测能力。然而，同一个模型在同一份数据中，如果目标不同，其有用性也会随着目标而不同。 <!-- TODO: uncomment this when section is written -- We'll dive more deeply into this topic in @sec-causal-pred-revisit. --></p>
@@ -514,7 +526,7 @@ Wynants, Laure, Ben Van Calster, Gary S Collins, et al. 2020. <span>“Predictio
 <hr>
 <ol>
 <li id="fn1"><p>John Burn-Murdoch 负责了其中许多展示，并就该主题做过一次<a href="https://cloud.rstudio.com/resources/rstudioglobal-2021/reporting-on-and-visualising-the-pandemic/">精彩演讲</a>。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>另见 <span class="quarto-unresolved-ref">?sec-dags</span>，其中还会讨论同一主题的一个因果研究例子。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>另见 <a href="04-dags.html" class="quarto-xref">Chapter&nbsp;<span>4</span></a>，其中还会讨论同一主题的一个因果研究例子。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>我们这里说的是单数”模型”，但数据科学家通常会为了实验拟合许多模型，而且最好的预测模型往往是多个模型预测的某种组合，称为堆叠模型。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
