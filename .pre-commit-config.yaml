@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: panache-format-chapters
+        name: panache format chapters/
+        entry: panache format chapters/
+        language: system
+        pass_filenames: false
+        files: ^chapters/.*\.(qmd|md)$

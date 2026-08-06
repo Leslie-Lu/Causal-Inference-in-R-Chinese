@@ -35,6 +35,7 @@ book:
       - chapters/02-whole-game.qmd
       - chapters/03-po-counterfactuals.qmd
       - chapters/04-dags.qmd
+      - chapters/05-not-just-a-stats-problem.qmd
 
     - chapters/99-references.qmd
 

@@ -63,19 +63,26 @@
     },
     "Formula": {
       "Package": "Formula",
-      "Version": "1.2-5",
+      "Version": "1.2-6",
       "Source": "Repository",
-      "Date": "2023-02-23",
+      "Date": "2026-08-01",
       "Title": "Extended Model Formulas",
       "Description": "Infrastructure for extended formulas with multiple parts on the right-hand side and/or multiple responses on the left-hand side (see <doi:10.18637/jss.v034.i01>).",
-      "Authors@R": "c(person(given = \"Achim\", family = \"Zeileis\", role = c(\"aut\", \"cre\"), email = \"Achim.Zeileis@R-project.org\", comment = c(ORCID = \"0000-0003-0918-3766\")), person(given = \"Yves\", family = \"Croissant\", role = \"aut\", email = \"Yves.Croissant@univ-reunion.fr\"))",
+      "Authors@R": "c(person(given = \"Achim\", family = \"Zeileis\", role = c(\"aut\", \"cre\"), email = \"Achim.Zeileis@R-project.org\", comment = c(ORCID = \"0000-0003-0918-3766\")), person(given = \"Yves\", family = \"Croissant\", role = \"aut\", email = \"Yves.Croissant@univ-reunion.fr\", comment = c(ORCID = \"0000-0002-4857-7736\")))",
       "Depends": [
         "R (>= 2.0.0)",
         "stats"
       ],
+      "Suggests": [
+        "knitr",
+        "rmarkdown"
+      ],
       "License": "GPL-2 | GPL-3",
+      "VignetteBuilder": "knitr",
+      "URL": "https://zeileis.codeberg.page/Formula/",
+      "BugReports": "https://codeberg.org/zeileis/Formula/issues",
       "NeedsCompilation": "no",
-      "Author": "Achim Zeileis [aut, cre] (<https://orcid.org/0000-0003-0918-3766>), Yves Croissant [aut]",
+      "Author": "Achim Zeileis [aut, cre] (ORCID: <https://orcid.org/0000-0003-0918-3766>), Yves Croissant [aut] (ORCID: <https://orcid.org/0000-0002-4857-7736>)",
       "Maintainer": "Achim Zeileis <Achim.Zeileis@R-project.org>",
       "Repository": "RSPM",
       "Encoding": "UTF-8"
@@ -697,7 +704,8 @@
       "URL": "https://www.rforge.net/base64enc",
       "BugReports": "https://github.com/s-u/base64enc/issues",
       "NeedsCompilation": "yes",
-      "Repository": "CRAN"
+      "Repository": "RSPM",
+      "Encoding": "UTF-8"
     },
     "bigD": {
       "Package": "bigD",
@@ -797,9 +805,10 @@
     },
     "bitops": {
       "Package": "bitops",
-      "Version": "1.0-9",
+      "Version": "1.1-0",
       "Source": "Repository",
-      "Date": "2024-10-03",
+      "VersionNote": "Last CRAN: 1.0-9 on 2024-10-03",
+      "Date": "2026-07-30",
       "Authors@R": "c( person(\"Steve\", \"Dutky\", role = \"aut\", email = \"sdutky@terpalum.umd.edu\", comment = \"S original; then (after MM's port) revised and modified\"), person(\"Martin\", \"Maechler\", role = c(\"cre\", \"aut\"), email = \"maechler@stat.math.ethz.ch\", comment = c(\"Initial R port; tweaks\", ORCID = \"0000-0002-8685-9910\")))",
       "Title": "Bitwise Operations",
       "Description": "Functions for bitwise operations on integer vectors.",
@@ -807,9 +816,9 @@
       "URL": "https://github.com/mmaechler/R-bitops",
       "BugReports": "https://github.com/mmaechler/R-bitops/issues",
       "NeedsCompilation": "yes",
-      "Author": "Steve Dutky [aut] (S original; then (after MM's port) revised and modified), Martin Maechler [cre, aut] (Initial R port; tweaks, <https://orcid.org/0000-0002-8685-9910>)",
+      "Author": "Steve Dutky [aut] (S original; then (after MM's port) revised and modified), Martin Maechler [cre, aut] (Initial R port; tweaks, ORCID: <https://orcid.org/0000-0002-8685-9910>)",
       "Maintainer": "Martin Maechler <maechler@stat.math.ethz.ch>",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Encoding": "UTF-8"
     },
     "blob": {
@@ -996,7 +1005,7 @@
     },
     "bslib": {
       "Package": "bslib",
-      "Version": "0.11.0",
+      "Version": "0.12.0",
       "Source": "Repository",
       "Title": "Custom 'Bootstrap' 'Sass' Themes for 'shiny' and 'rmarkdown'",
       "Authors@R": "c( person(\"Carson\", \"Sievert\", , \"carson@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-4958-2844\")), person(\"Joe\", \"Cheng\", , \"joe@posit.co\", role = \"aut\"), person(\"Garrick\", \"Aden-Buie\", , \"garrick@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-7111-0077\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")), person(, \"Bootstrap contributors\", role = \"ctb\", comment = \"Bootstrap library\"), person(, \"Twitter, Inc\", role = \"cph\", comment = \"Bootstrap library\"), person(\"Javi\", \"Aguilar\", role = c(\"ctb\", \"cph\"), comment = \"Bootstrap colorpicker library\"), person(\"Thomas\", \"Park\", role = c(\"ctb\", \"cph\"), comment = \"Bootswatch library\"), person(, \"PayPal\", role = c(\"ctb\", \"cph\"), comment = \"Bootstrap accessibility plugin\") )",
@@ -1049,11 +1058,11 @@
       "Config/testthat/parallel": "true",
       "Config/testthat/start-first": "zzzz-bs-sass, fonts, zzz-precompile, theme-*, rmd-*",
       "Encoding": "UTF-8",
-      "Collate": "'accordion.R' 'breakpoints.R' 'bs-current-theme.R' 'bs-dependencies.R' 'bs-global.R' 'bs-remove.R' 'bs-theme-layers.R' 'bs-theme-preset-bootswatch.R' 'bs-theme-preset-brand.R' 'bs-theme-preset-builtin.R' 'bs-theme-preset.R' 'utils.R' 'bs-theme-preview.R' 'bs-theme-update.R' 'bs-theme.R' 'bslib-package.R' 'buttons.R' 'card.R' 'deprecated.R' 'files.R' 'fill.R' 'imports.R' 'input-code-editor.R' 'input-dark-mode.R' 'input-submit.R' 'input-switch.R' 'layout.R' 'nav-items.R' 'nav-update.R' 'navbar_options.R' 'navs-legacy.R' 'navs.R' 'onLoad.R' 'page.R' 'popover.R' 'precompiled.R' 'print.R' 'shiny-devmode.R' 'sidebar.R' 'staticimports.R' 'toast.R' 'toolbar.R' 'tooltip.R' 'utils-deps.R' 'utils-shiny.R' 'utils-tags.R' 'value-box.R' 'version-default.R' 'versions.R'",
+      "Collate": "'accordion.R' 'breakpoints.R' 'bs-current-theme.R' 'bs-dependencies.R' 'bs-global.R' 'bs-remove.R' 'bs-theme-layers.R' 'bs-theme-preset-bootswatch.R' 'bs-theme-preset-brand.R' 'bs-theme-preset-builtin.R' 'bs-theme-preset.R' 'utils.R' 'bs-theme-preview.R' 'bs-theme-update.R' 'bs-theme.R' 'bslib-package.R' 'buttons.R' 'card.R' 'deprecated.R' 'files.R' 'fill.R' 'imports.R' 'input-code-editor.R' 'input-dark-mode.R' 'input-submit.R' 'input-switch.R' 'layout.R' 'nav-items.R' 'nav-update.R' 'navbar_options.R' 'navs-legacy.R' 'navs.R' 'offcanvas.R' 'onLoad.R' 'page.R' 'popover.R' 'precompiled.R' 'print.R' 'shiny-devmode.R' 'sidebar.R' 'staticimports.R' 'toast.R' 'toolbar.R' 'tooltip.R' 'utils-deps.R' 'utils-shiny.R' 'utils-tags.R' 'value-box.R' 'version-default.R' 'versions.R'",
       "NeedsCompilation": "no",
       "Author": "Carson Sievert [aut, cre] (ORCID: <https://orcid.org/0000-0002-4958-2844>), Joe Cheng [aut], Garrick Aden-Buie [aut] (ORCID: <https://orcid.org/0000-0002-7111-0077>), Posit Software, PBC [cph, fnd], Bootstrap contributors [ctb] (Bootstrap library), Twitter, Inc [cph] (Bootstrap library), Javi Aguilar [ctb, cph] (Bootstrap colorpicker library), Thomas Park [ctb, cph] (Bootswatch library), PayPal [ctb, cph] (Bootstrap accessibility plugin)",
       "Maintainer": "Carson Sievert <carson@posit.co>",
-      "Repository": "CRAN"
+      "Repository": "RSPM"
     },
     "caTools": {
       "Package": "caTools",
@@ -1262,6 +1271,41 @@
       "Author": "Nick Huntington-Klein [aut, cre] (<https://orcid.org/0000-0002-7352-3991>), Malcolm Barrett [aut] (<https://orcid.org/0000-0003-0299-5825>)",
       "Maintainer": "Nick Huntington-Klein <nhuntington-klein@seattleu.edu>",
       "Repository": "RSPM"
+    },
+    "causalgenerics": {
+      "Package": "causalgenerics",
+      "Version": "0.1.0.9000",
+      "Source": "GitHub",
+      "Title": "Shared Generics for the 'r-causal' Ecosystem",
+      "Authors@R": "person(\"Malcolm\", \"Barrett\", , \"malcolmbarrett@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"), comment = c(ORCID = \"0000-0003-0299-5825\"))",
+      "Description": "A home for the S3 generics shared across the 'r-causal' ecosystem, including 'propensity', 'halfmoon', 'positively', and 'balancing'. Owning the generic definitions in one place lets those packages register methods without masking one another when several are attached at once. The generics cover inverse probability weighted estimation, effective sample size, and the metadata carried by causal weight vectors, and the package supplies the abstract causal weight class and the result class those estimates are returned in, together with the methods both classes carry, so that the ecosystem packages inherit them rather than writing their own. The design follows that of the 'generics' package, which provides commonly used S3 generics for the same purpose: letting packages share a single definition instead of each defining its own.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://github.com/r-causal/causalgenerics, https://r-causal.github.io/causalgenerics/",
+      "BugReports": "https://github.com/r-causal/causalgenerics/issues",
+      "Depends": [
+        "R (>= 4.1.0)"
+      ],
+      "Imports": [
+        "stats",
+        "vctrs"
+      ],
+      "Suggests": [
+        "testthat (>= 3.2.0)",
+        "withr"
+      ],
+      "Config/roxygen2/version": "8.0.0",
+      "Config/testthat/edition": "3",
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "causalgenerics",
+      "RemoteUsername": "r-causal",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "cc0b41c4d63255bc211e5650c17978dd3d4f4776",
+      "NeedsCompilation": "no",
+      "Author": "Malcolm Barrett [aut, cre, cph] (ORCID: <https://orcid.org/0000-0003-0299-5825>)",
+      "Maintainer": "Malcolm Barrett <malcolmbarrett@gmail.com>"
     },
     "causalworkshop": {
       "Package": "causalworkshop",
@@ -1791,6 +1835,37 @@
       "Maintainer": "Tyson Barrett <t.barrett88@gmail.com>",
       "Repository": "CRAN"
     },
+    "datasauRus": {
+      "Package": "datasauRus",
+      "Version": "0.1.9",
+      "Source": "Repository",
+      "Title": "Datasets from the Datasaurus Dozen",
+      "Authors@R": "c( person(\"Colin\", \"Gillespie\", , \"colin@jumpingrivers.com\", role = c(\"cre\", \"aut\")), person(\"Steph\", \"Locke\", , \"stephanie.g.locke@gmail.com\", role = \"aut\"), person(\"Alberto\", \"Cairo\", , \"alberto.cairo@gmail.com\", role = \"dtc\"), person(\"Rhian\", \"Davies\", , \"statsrhian@gmail.com\", role = \"aut\"), person(\"Justin\", \"Matejka\", , \"Justin.Matejka@autodesk.com\", role = \"dtc\"), person(\"George\", \"Fitzmaurice\", , \"George.Fitzmaurice@autodesk.com\", role = \"dtc\"), person(\"Lucy\", \"D'Agostino McGowan\", , \"ld.mcgowan@vanderbilt.edu\", role = \"aut\"), person(\"Richard\", \"Cotton\", , \"richierocks@gmail.com\", role = \"ctb\"), person(\"Tim\", \"Book\", , \"TimothyKBook@gmail.com\", role = \"ctb\"), person(\"Jumping Rivers\", role = \"fnd\") )",
+      "Description": "The Datasaurus Dozen is a set of datasets with the same summary statistics. They retain the same summary statistics despite having radically different distributions.  The datasets represent a larger and quirkier object lesson that is typically taught via Anscombe's Quartet (available in the 'datasets' package). Anscombe's Quartet contains four very different distributions with the same summary statistics and as such highlights the value of visualisation in understanding data, over and above summary statistics. As well as being an engaging variant on the Quartet, the data is generated in a novel way. The simulated annealing process used to derive datasets from the original Datasaurus is detailed in \"Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing\" <doi:10.1145/3025453.3025912>.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://github.com/jumpingrivers/datasauRus, https://jumpingrivers.github.io/datasauRus/",
+      "BugReports": "https://github.com/jumpingrivers/datasauRus/issues",
+      "Depends": [
+        "R (>= 3.5.0)"
+      ],
+      "Suggests": [
+        "dplyr",
+        "ggplot2",
+        "knitr",
+        "rmarkdown",
+        "spelling",
+        "testthat"
+      ],
+      "VignetteBuilder": "knitr",
+      "Encoding": "UTF-8",
+      "Language": "en-US",
+      "LazyData": "true",
+      "RoxygenNote": "7.3.2",
+      "NeedsCompilation": "no",
+      "Author": "Colin Gillespie [cre, aut], Steph Locke [aut], Alberto Cairo [dtc], Rhian Davies [aut], Justin Matejka [dtc], George Fitzmaurice [dtc], Lucy D'Agostino McGowan [aut], Richard Cotton [ctb], Tim Book [ctb], Jumping Rivers [fnd]",
+      "Maintainer": "Colin Gillespie <colin@jumpingrivers.com>",
+      "Repository": "CRAN"
+    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "2.6.0",
@@ -1855,6 +1930,62 @@
       "Author": "Hadley Wickham [aut, cre], Maximilian Girlich [aut], Edgar Ruiz [aut], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
+    },
+    "deli": {
+      "Package": "deli",
+      "Version": "0.1.0",
+      "Source": "GitHub",
+      "Title": "M-Estimation and Empirical Sandwich Variance Estimation",
+      "Authors@R": "c( person(\"Malcolm\", \"Barrett\", , \"malcolmbarrett@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"), comment = c(ORCID = \"0000-0003-0299-5825\")), person(\"Paul\", \"Zivich\", role = \"ctb\", comment = c(ORCID = \"0000-0002-9932-1095\", \"Author of the Python 'delicatessen' library, whose design deli ports\")) )",
+      "Description": "Solves estimating equations to obtain M-estimators together with empirical sandwich variance estimates, providing a general interface for both custom and built-in estimating equations.  Built-in equations cover basic statistics, regression, causal inference, survival analysis, measurement error, and more. An 'R' port of the 'Python' library 'delicatessen' described in 'Zivich et al. (2022)' <doi:10.48550/arXiv.2203.11300>.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://github.com/r-causal/deli, https://r-causal.github.io/deli/",
+      "BugReports": "https://github.com/r-causal/deli/issues",
+      "Depends": [
+        "R (>= 4.3)"
+      ],
+      "Imports": [
+        "cli",
+        "generics",
+        "rlang (>= 1.0.0)",
+        "rootSolve",
+        "S7 (>= 0.2.0)",
+        "stats"
+      ],
+      "Suggests": [
+        "causaldata",
+        "jsonlite",
+        "knitr",
+        "MASS",
+        "minpack.lm",
+        "nleqslv",
+        "nlme",
+        "quarto",
+        "readxl",
+        "rmarkdown",
+        "testthat (>= 3.0.0)",
+        "yaml"
+      ],
+      "VignetteBuilder": "knitr",
+      "Config/Needs/website": "ggplot2, quarto, reticulate",
+      "Config/roxygen2/version": "8.0.0",
+      "Config/testthat/edition": "3",
+      "Config/testthat/parallel": "true",
+      "Config/testthat/start-first": "confidence-bands, autodiff, predictions, estimate-solvers, validation, formula-interface",
+      "Encoding": "UTF-8",
+      "Language": "en-US",
+      "LazyData": "true",
+      "LazyDataCompression": "xz",
+      "Roxygen": "list(markdown = TRUE)",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "deli",
+      "RemoteUsername": "r-causal",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "2e497addb2101dec340c8b829fe28ddd166e98d0",
+      "NeedsCompilation": "no",
+      "Author": "Malcolm Barrett [aut, cre, cph] (ORCID: <https://orcid.org/0000-0003-0299-5825>), Paul Zivich [ctb] (ORCID: <https://orcid.org/0000-0002-9932-1095>, Author of the Python 'delicatessen' library, whose design deli ports)",
+      "Maintainer": "Malcolm Barrett <malcolmbarrett@gmail.com>"
     },
     "desc": {
       "Package": "desc",
@@ -3675,8 +3806,8 @@
     },
     "halfmoon": {
       "Package": "halfmoon",
-      "Version": "0.2.0",
-      "Source": "Repository",
+      "Version": "0.2.0.9000",
+      "Source": "GitHub",
       "Title": "Techniques to Build Better Balance",
       "Authors@R": "person(\"Malcolm\", \"Barrett\", , \"malcolmbarrett@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"), comment = c(ORCID = \"0000-0003-0299-5825\"))",
       "Description": "Build better balance in causal inference models. 'halfmoon' helps you assess propensity score models for balance between groups using metrics like standardized mean differences and visualization techniques like mirrored histograms. 'halfmoon' supports both weighting and matching techniques.",
@@ -3687,6 +3818,7 @@
         "R (>= 4.1.0)"
       ],
       "Imports": [
+        "causalgenerics (>= 0.0.0.9000)",
         "cli",
         "dplyr",
         "ggplot2",
@@ -3707,20 +3839,28 @@
         "cardx (>= 0.2.3)",
         "cobalt",
         "covr",
+        "independenceWeights",
         "mgcv",
         "survey",
         "testthat (>= 3.0.0)",
         "vdiffr",
         "withr"
       ],
+      "Remotes": "r-causal/causalgenerics",
+      "Config/roxygen2/version": "8.0.0",
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
       "LazyData": "true",
-      "RoxygenNote": "7.3.3",
+      "Roxygen": "list(markdown = TRUE)",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "halfmoon",
+      "RemoteUsername": "r-causal",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "87426b7862043500f56057444a3689cff5d446d9",
       "NeedsCompilation": "no",
       "Author": "Malcolm Barrett [aut, cre, cph] (ORCID: <https://orcid.org/0000-0003-0299-5825>)",
-      "Maintainer": "Malcolm Barrett <malcolmbarrett@gmail.com>",
-      "Repository": "CRAN"
+      "Maintainer": "Malcolm Barrett <malcolmbarrett@gmail.com>"
     },
     "hardhat": {
       "Package": "hardhat",
@@ -5427,13 +5567,17 @@
       "URL": "https://r-causal.github.io/propensity/, https://github.com/r-causal/propensity",
       "BugReports": "https://github.com/r-causal/propensity/issues",
       "Depends": [
-        "R (>= 4.2.0)"
+        "R (>= 4.3)"
       ],
       "Imports": [
+        "causalgenerics (>= 0.0.0.9000)",
         "cli",
+        "deli",
+        "generics",
         "lifecycle",
         "rlang",
         "stats",
+        "tibble",
         "tidyselect",
         "vctrs (>= 0.6.5)"
       ],
@@ -5442,6 +5586,7 @@
         "dplyr",
         "ggplot2",
         "knitr",
+        "MASS",
         "mgcv",
         "nnet",
         "parsnip",
@@ -5449,24 +5594,24 @@
         "PSweight",
         "rmarkdown",
         "spelling",
-        "testthat (>= 3.0.0)",
-        "tibble",
+        "testthat (>= 3.1.9)",
         "tidyr",
         "WeightIt",
         "withr"
       ],
       "VignetteBuilder": "knitr",
+      "Remotes": "r-causal/causalgenerics, r-causal/deli",
+      "Config/roxygen2/version": "8.0.0",
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
       "Language": "en-US",
       "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.3",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "propensity",
       "RemoteUsername": "r-causal",
       "RemoteRef": "HEAD",
-      "RemoteSha": "1bd5e02f2c2833909aa2ec9f73a71fd945c010a5",
+      "RemoteSha": "15660abf6042f58664523c5513ef1b952a5acdc4",
       "NeedsCompilation": "no",
       "Author": "Malcolm Barrett [aut, cre, cph] (ORCID: <https://orcid.org/0000-0003-0299-5825>)",
       "Maintainer": "Malcolm Barrett <malcolmbarrett@gmail.com>"
@@ -5904,6 +6049,60 @@
       "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
       "Repository": "CRAN"
     },
+    "renv": {
+      "Package": "renv",
+      "Version": "1.1.5",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Project Environments",
+      "Authors@R": "c( person(\"Kevin\", \"Ushey\", role = c(\"aut\", \"cre\"), email = \"kevin@rstudio.com\", comment = c(ORCID = \"0000-0003-2880-7407\")), person(\"Hadley\", \"Wickham\", role = c(\"aut\"), email = \"hadley@rstudio.com\", comment = c(ORCID = \"0000-0003-4757-117X\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")) )",
+      "Description": "A dependency management toolkit for R. Using 'renv', you can create and manage project-local R libraries, save the state of these libraries to a 'lockfile', and later restore your library as required. Together, these tools can help make your projects more isolated, portable, and reproducible.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://rstudio.github.io/renv/, https://github.com/rstudio/renv",
+      "BugReports": "https://github.com/rstudio/renv/issues",
+      "Imports": [
+        "utils"
+      ],
+      "Suggests": [
+        "BiocManager",
+        "cli",
+        "compiler",
+        "covr",
+        "cpp11",
+        "devtools",
+        "generics",
+        "gitcreds",
+        "jsonlite",
+        "jsonvalidate",
+        "knitr",
+        "miniUI",
+        "modules",
+        "packrat",
+        "pak",
+        "R6",
+        "remotes",
+        "reticulate",
+        "rmarkdown",
+        "rstudioapi",
+        "shiny",
+        "testthat",
+        "uuid",
+        "waldo",
+        "yaml",
+        "webfakes"
+      ],
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.3.2",
+      "VignetteBuilder": "knitr",
+      "Config/Needs/website": "tidyverse/tidytemplate",
+      "Config/testthat/edition": "3",
+      "Config/testthat/parallel": "true",
+      "Config/testthat/start-first": "bioconductor,python,install,restore,snapshot,retrieve,remotes",
+      "NeedsCompilation": "no",
+      "Author": "Kevin Ushey [aut, cre] (ORCID: <https://orcid.org/0000-0003-2880-7407>), Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Posit Software, PBC [cph, fnd]",
+      "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
+      "Repository": "RSPM"
+    },
     "reprex": {
       "Package": "reprex",
       "Version": "2.1.1",
@@ -6096,6 +6295,28 @@
       "Author": "JJ Allaire [aut], Yihui Xie [aut, cre] (ORCID: <https://orcid.org/0000-0003-0645-5666>), Christophe Dervieux [aut] (ORCID: <https://orcid.org/0000-0003-4474-2498>), Jonathan McPherson [aut], Javier Luraschi [aut], Kevin Ushey [aut], Aron Atkins [aut], Hadley Wickham [aut], Joe Cheng [aut], Winston Chang [aut], Richard Iannone [aut] (ORCID: <https://orcid.org/0000-0003-3925-190X>), Andrew Dunning [ctb] (ORCID: <https://orcid.org/0000-0003-0464-5036>), Atsushi Yasumoto [ctb, cph] (ORCID: <https://orcid.org/0000-0002-8335-495X>, cph: Number sections Lua filter), Barret Schloerke [ctb], Carson Sievert [ctb] (ORCID: <https://orcid.org/0000-0002-4958-2844>), Devon Ryan [ctb] (ORCID: <https://orcid.org/0000-0002-8549-0971>), Frederik Aust [ctb] (ORCID: <https://orcid.org/0000-0003-4900-788X>), Jeff Allen [ctb], JooYoung Seo [ctb] (ORCID: <https://orcid.org/0000-0002-4064-6012>), Malcolm Barrett [ctb], Rob Hyndman [ctb], Romain Lesur [ctb], Roy Storey [ctb], Ruben Arslan [ctb], Sergio Oller [ctb], Posit Software, PBC [cph, fnd], jQuery UI contributors [ctb, cph] (jQuery UI library; authors listed in inst/rmd/h/jqueryui/AUTHORS.txt), Mark Otto [ctb] (Bootstrap library), Jacob Thornton [ctb] (Bootstrap library), Bootstrap contributors [ctb] (Bootstrap library), Twitter, Inc [cph] (Bootstrap library), Alexander Farkas [ctb, cph] (html5shiv library), Scott Jehl [ctb, cph] (Respond.js library), Ivan Sagalaev [ctb, cph] (highlight.js library), Greg Franko [ctb, cph] (tocify library), John MacFarlane [ctb, cph] (Pandoc templates), Google, Inc. [ctb, cph] (ioslides library), Dave Raggett [ctb] (slidy library), W3C [cph] (slidy library), Dave Gandy [ctb, cph] (Font-Awesome), Ben Sperry [ctb] (Ionicons), Drifty [cph] (Ionicons), Aidan Lister [ctb, cph] (jQuery StickyTabs), Benct Philip Jonsson [ctb, cph] (pagebreak Lua filter), Albert Krewinkel [ctb, cph] (pagebreak Lua filter)",
       "Maintainer": "Yihui Xie <xie@yihui.name>",
       "Repository": "CRAN"
+    },
+    "rootSolve": {
+      "Package": "rootSolve",
+      "Version": "1.8.2.4",
+      "Source": "Repository",
+      "Title": "Nonlinear Root Finding, Equilibrium and Steady-State Analysis of Ordinary Differential Equations",
+      "Authors@R": "c(person(\"Karline\",\"Soetaert\", role = c(\"aut\", \"cre\"),  email = \"karline.soetaert@nioz.nl\"), person(\"Alan C.\",\"Hindmarsh\", role = \"ctb\",  comment = \"files lsodes.f, sparse.f\"), person(\"S.C.\",\"Eisenstat\", role = \"ctb\",  comment = \"file sparse.f\"), person(\"Cleve\",\"Moler\", role = \"ctb\",  comment = \"file dlinpk.f\"), person(\"Jack\",\"Dongarra\", role = \"ctb\",  comment = \"file dlinpk.f\"), person(\"Youcef\", \"Saad\", role = \"ctb\",  comment = \"file dsparsk.f\"))",
+      "Maintainer": "Karline Soetaert <karline.soetaert@nioz.nl>",
+      "Author": "Karline Soetaert [aut, cre], Alan C. Hindmarsh [ctb] (files lsodes.f, sparse.f), S.C. Eisenstat [ctb] (file sparse.f), Cleve Moler [ctb] (file dlinpk.f), Jack Dongarra [ctb] (file dlinpk.f), Youcef Saad [ctb] (file dsparsk.f)",
+      "Depends": [
+        "R (>= 2.01)"
+      ],
+      "Imports": [
+        "stats",
+        "graphics",
+        "grDevices"
+      ],
+      "Description": "Routines to find the root of nonlinear functions, and to perform steady-state and equilibrium analysis of ordinary differential equations (ODE).  Includes routines that: (1) generate gradient and jacobian matrices (full and banded), (2) find roots of non-linear equations by the 'Newton-Raphson' method,  (3) estimate steady-state conditions of a system of (differential) equations in full, banded or sparse form, using the 'Newton-Raphson' method, or by dynamically running, (4) solve the steady-state conditions for uni-and multicomponent 1-D, 2-D, and 3-D partial differential equations, that have been converted to ordinary differential equations by numerical differencing (using the method-of-lines approach). Includes fortran code.",
+      "License": "GPL (>= 2)",
+      "NeedsCompilation": "yes",
+      "Repository": "RSPM",
+      "Encoding": "UTF-8"
     },
     "rprojroot": {
       "Package": "rprojroot",
@@ -7991,7 +8212,7 @@
     },
     "zip": {
       "Package": "zip",
-      "Version": "3.0.1",
+      "Version": "3.0.2",
       "Source": "Repository",
       "Title": "Cross-Platform 'zip' Compression",
       "Authors@R": "c( person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Kuba\", \"Podgórski\", role = \"ctb\"), person(\"Rich\", \"Geldreich\", role = \"ctb\"), person(\"Arm Limited\", role = c(\"ctb\", \"cph\"), comment = \"bundled Mbed TLS crypto subset in src/mbedtls/ (Apache-2.0)\"), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")) )",
