@@ -210,6 +210,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-not-just-a-stats-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -712,16 +718,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 2
    splits             id           
    &lt;list&gt;             &lt;chr&gt;        
- 1 &lt;split [1752/645]&gt; Bootstrap0001
- 2 &lt;split [1752/647]&gt; Bootstrap0002
- 3 &lt;split [1752/642]&gt; Bootstrap0003
- 4 &lt;split [1752/645]&gt; Bootstrap0004
- 5 &lt;split [1752/640]&gt; Bootstrap0005
- 6 &lt;split [1752/654]&gt; Bootstrap0006
- 7 &lt;split [1752/644]&gt; Bootstrap0007
- 8 &lt;split [1752/664]&gt; Bootstrap0008
- 9 &lt;split [1752/654]&gt; Bootstrap0009
-10 &lt;split [1752/637]&gt; Bootstrap0010
+ 1 &lt;split [1752/631]&gt; Bootstrap0001
+ 2 &lt;split [1752/642]&gt; Bootstrap0002
+ 3 &lt;split [1752/629]&gt; Bootstrap0003
+ 4 &lt;split [1752/657]&gt; Bootstrap0004
+ 5 &lt;split [1752/644]&gt; Bootstrap0005
+ 6 &lt;split [1752/675]&gt; Bootstrap0006
+ 7 &lt;split [1752/634]&gt; Bootstrap0007
+ 8 &lt;split [1752/607]&gt; Bootstrap0008
+ 9 &lt;split [1752/635]&gt; Bootstrap0009
+10 &lt;split [1752/650]&gt; Bootstrap0010
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -738,16 +744,16 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 # A tibble: 1,001 × 3
    splits             id            boot_fits       
    &lt;list&gt;             &lt;chr&gt;         &lt;list&gt;          
- 1 &lt;split [1752/645]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
- 2 &lt;split [1752/647]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
- 3 &lt;split [1752/642]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
- 4 &lt;split [1752/645]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
- 5 &lt;split [1752/640]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
- 6 &lt;split [1752/654]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
- 7 &lt;split [1752/644]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
- 8 &lt;split [1752/664]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
- 9 &lt;split [1752/654]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
-10 &lt;split [1752/637]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
+ 1 &lt;split [1752/631]&gt; Bootstrap0001 &lt;tibble [2 × 5]&gt;
+ 2 &lt;split [1752/642]&gt; Bootstrap0002 &lt;tibble [2 × 5]&gt;
+ 3 &lt;split [1752/629]&gt; Bootstrap0003 &lt;tibble [2 × 5]&gt;
+ 4 &lt;split [1752/657]&gt; Bootstrap0004 &lt;tibble [2 × 5]&gt;
+ 5 &lt;split [1752/644]&gt; Bootstrap0005 &lt;tibble [2 × 5]&gt;
+ 6 &lt;split [1752/675]&gt; Bootstrap0006 &lt;tibble [2 × 5]&gt;
+ 7 &lt;split [1752/634]&gt; Bootstrap0007 &lt;tibble [2 × 5]&gt;
+ 8 &lt;split [1752/607]&gt; Bootstrap0008 &lt;tibble [2 × 5]&gt;
+ 9 &lt;split [1752/635]&gt; Bootstrap0009 &lt;tibble [2 × 5]&gt;
+10 &lt;split [1752/650]&gt; Bootstrap0010 &lt;tibble [2 × 5]&gt;
 # ℹ 991 more rows</code></pre>
 </div>
 </div>
@@ -758,8 +764,8 @@ Figure&nbsp;2.7: 平均处理效应（ATE）权重的密度图。该图呈偏态
 <pre><code># A tibble: 2 × 5
   term        estimate std.error statistic  p.value
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)     43.1     0.446      96.7 0       
-2 netTRUE        -13.3     0.630     -21.1 6.23e-88</code></pre>
+1 (Intercept)     42.7     0.435      98.2 0       
+2 netTRUE        -12.3     0.614     -20.1 8.78e-81</code></pre>
 </div>
 </div>
 <p>现在我们得到了一个估计值分布：</p>
@@ -891,7 +897,7 @@ Figure&nbsp;2.10: <code>net_data</code> 的真实因果图。该 DAG 与我们�
 </div>
 </div>
 </div>
-<p><a href="#fig-net-data-true-dag" class="quarto-xref">Figure&nbsp;<span>2.10</span></a> 中的未测量混杂因素在数据集 <code>net_data_full</code> 中以 <code>genetic_resistance</code> 的形式提供。 若重新计算蚊帐对疟疾风险平均处理效应的 IPW 估计，可得到 -10.2 (95% CI -11.2, -9.3)，这更接近真实答案 -10。</p>
+<p><a href="#fig-net-data-true-dag" class="quarto-xref">Figure&nbsp;<span>2.10</span></a> 中的未测量混杂因素在数据集 <code>net_data_full</code> 中以 <code>genetic_resistance</code> 的形式提供。 若重新计算蚊帐对疟疾风险平均处理效应的 IPW 估计，可得到 -10.3 (95% CI -11.2, -9.3)，这更接近真实答案 -10。</p>
 <p>你怎么看？ 这一估计可靠吗？ 我们是否妥善处理了获得因果效应所需的假设，主要是不存在混杂这一假设？ 你会如何批评这个模型，又会做出哪些不同的处理？ 好吧，由于数据是模拟生成的，我们知道 -10 是正确答案；但在实践中我们永远无法完全确定，因此需要持续检验假设，直至确信它们是稳健的。 我们将在 <span class="quarto-unresolved-ref">?sec-sensitivity</span> 中探讨这些技术及其他方法。 <!-- TODO: Maybe use sickle cell as an example of a precision variable in the variable selection section later in the book. Interesting instance because sickle cell can't be downstream. Consider in the context of over adjustment. --></p>
 <p>为计算该效应，我们：</p>
 <ol type="1">

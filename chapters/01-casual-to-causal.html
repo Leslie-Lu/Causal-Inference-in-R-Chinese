@@ -175,6 +175,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-not-just-a-stats-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -383,7 +389,7 @@ Figure&nbsp;1.2: 2020 年超额死亡人数与历史上所有原因预期死亡�
 </section>
 <section id="sec-pred-or-explain" class="level3" data-number="1.2.5">
 <h3 data-number="1.2.5" class="anchored" data-anchor-id="sec-pred-or-explain"><span class="header-section-number">1.2.5</span> 为什么正确的因果模型不简单等同于最好的预测模型？</h3>
-<p>到这里，你可能会想，为什么正确的因果模型不简单等同于最好的预测模型。两者相关是有道理的：自然地，会导致其他事物的因素也会是预测因子。因果关系层层相连，因此任何预测信息在某种程度上都与我们所预测事物的因果结构有关。难道不应该认为，一个预测得好的模型也具有因果性吗？确实，<em>有些</em>预测模型可以是很好的因果模型，反之亦然。不幸的是，情况并不总是如此；因果效应不一定有很好的预测能力，而好的预测因子也不一定在因果上无偏 <span class="citation" data-cites="shmueli2010a">(<a href="99-references.html#ref-shmueli2010a" role="doc-biblioref">Shmueli 2010</a>)</span>。仅凭数据无法知道这一点，这正是 <span class="quarto-unresolved-ref">?sec-quartets</span> 的主题。</p>
+<p>到这里，你可能会想，为什么正确的因果模型不简单等同于最好的预测模型。两者相关是有道理的：自然地，会导致其他事物的因素也会是预测因子。因果关系层层相连，因此任何预测信息在某种程度上都与我们所预测事物的因果结构有关。难道不应该认为，一个预测得好的模型也具有因果性吗？确实，<em>有些</em>预测模型可以是很好的因果模型，反之亦然。不幸的是，情况并不总是如此；因果效应不一定有很好的预测能力，而好的预测因子也不一定在因果上无偏 <span class="citation" data-cites="shmueli2010a">(<a href="99-references.html#ref-shmueli2010a" role="doc-biblioref">Shmueli 2010</a>)</span>。仅凭数据无法知道这一点，这正是 <a href="05-not-just-a-stats-problem.html" class="quarto-xref"><span>Chapter 5</span></a> 的主题。</p>
 <p>我们先从因果视角看，因为它稍微简单一些。设想一个针对某个暴露的因果无偏模型，它只包含同时与结局<em>和</em>暴露相关的变量。换句话说，这个模型为我们感兴趣的暴露提供了正确答案，但并不包含结局的其他预测因子（有时这可能是个好主意，正如 <span class="quarto-unresolved-ref">?sec-strat-outcome</span> 中所讨论的）。如果一个结局有许多原因，那么一个准确描述其与单一暴露关系的模型，很可能无法很好地预测该结局。同样，如果暴露对结局的真实因果效应很小，它带来的预测价值也很有限。换句话说，一个模型的预测能力无论高低，都无法帮助我们区分该模型是否给出了正确答案。当然，低预测能力也可能表明某个因果效应从应用角度看并没有太大用处，尽管这还取决于若干统计因素。</p>
 <p>预测模型并不总是无偏因果模型，还有两个更复杂的原因。第一个原因，我们考虑一个从因果角度看准确的模型：它估计对某个结局的效应，而且所有这些效应都是无偏的。即使在这种理想情形下，你也可能用另一个模型得到更好的预测。原因与预测建模中的偏差-方差权衡有关。当效应很小、数据噪声很大、预测因子高度相关，或数据量不多时，使用带有偏倚的模型（如惩罚回归）可能是有道理的。这些模型有意引入偏倚，以换取样本外预测中方差的改善。由于预测和因果推断的目标不同（通常是对样本外观察进行准确预测，而不是估计无偏效应），最适合推断的模型不一定是最好的预测模型。</p>
 <!-- TODO: maybe include a simulation to prove it? -->

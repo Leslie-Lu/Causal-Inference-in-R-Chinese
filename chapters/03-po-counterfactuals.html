@@ -242,6 +242,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-not-just-a-stats-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -454,23 +460,23 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-po-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="eiogpxcdrx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#eiogpxcdrx table {
+<div id="wntwpltyvw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wntwpltyvw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#eiogpxcdrx thead, #eiogpxcdrx tbody, #eiogpxcdrx tfoot, #eiogpxcdrx tr, #eiogpxcdrx td, #eiogpxcdrx th {
+#wntwpltyvw thead, #wntwpltyvw tbody, #wntwpltyvw tfoot, #wntwpltyvw tr, #wntwpltyvw td, #wntwpltyvw th {
   border-style: none;
 }
 
-#eiogpxcdrx p {
+#wntwpltyvw p {
   margin: 0;
   padding: 0;
 }
 
-#eiogpxcdrx .gt_table {
+#wntwpltyvw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -496,12 +502,12 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-left-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_caption {
+#wntwpltyvw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eiogpxcdrx .gt_title {
+#wntwpltyvw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -513,7 +519,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-bottom-width: 0;
 }
 
-#eiogpxcdrx .gt_subtitle {
+#wntwpltyvw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -525,7 +531,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-top-width: 0;
 }
 
-#eiogpxcdrx .gt_heading {
+#wntwpltyvw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -537,13 +543,13 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-right-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_bottom_border {
+#wntwpltyvw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_col_headings {
+#wntwpltyvw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -558,7 +564,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-right-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_col_heading {
+#wntwpltyvw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -578,7 +584,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   overflow-x: hidden;
 }
 
-#eiogpxcdrx .gt_column_spanner_outer {
+#wntwpltyvw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -590,15 +596,15 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 4px;
 }
 
-#eiogpxcdrx .gt_column_spanner_outer:first-child {
+#wntwpltyvw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eiogpxcdrx .gt_column_spanner_outer:last-child {
+#wntwpltyvw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eiogpxcdrx .gt_column_spanner {
+#wntwpltyvw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -610,11 +616,11 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   width: 100%;
 }
 
-#eiogpxcdrx .gt_spanner_row {
+#wntwpltyvw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#eiogpxcdrx .gt_group_heading {
+#wntwpltyvw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -640,7 +646,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   text-align: left;
 }
 
-#eiogpxcdrx .gt_empty_group_heading {
+#wntwpltyvw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -655,15 +661,15 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   vertical-align: middle;
 }
 
-#eiogpxcdrx .gt_from_md > :first-child {
+#wntwpltyvw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eiogpxcdrx .gt_from_md > :last-child {
+#wntwpltyvw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eiogpxcdrx .gt_row {
+#wntwpltyvw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -682,7 +688,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   overflow-x: hidden;
 }
 
-#eiogpxcdrx .gt_stub {
+#wntwpltyvw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -695,7 +701,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 5px;
 }
 
-#eiogpxcdrx .gt_stub_row_group {
+#wntwpltyvw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -709,15 +715,15 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   vertical-align: top;
 }
 
-#eiogpxcdrx .gt_row_group_first td {
+#wntwpltyvw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eiogpxcdrx .gt_row_group_first th {
+#wntwpltyvw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#eiogpxcdrx .gt_summary_row {
+#wntwpltyvw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -727,16 +733,16 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 5px;
 }
 
-#eiogpxcdrx .gt_first_summary_row {
+#wntwpltyvw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_first_summary_row.thick {
+#wntwpltyvw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eiogpxcdrx .gt_last_summary_row {
+#wntwpltyvw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -746,7 +752,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-bottom-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_grand_summary_row {
+#wntwpltyvw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -756,7 +762,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 5px;
 }
 
-#eiogpxcdrx .gt_first_grand_summary_row {
+#wntwpltyvw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -766,7 +772,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-top-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_last_grand_summary_row_top {
+#wntwpltyvw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -776,11 +782,11 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-bottom-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_striped {
+#wntwpltyvw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eiogpxcdrx .gt_table_body {
+#wntwpltyvw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -789,7 +795,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-bottom-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_footnotes {
+#wntwpltyvw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -803,7 +809,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-right-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_footnote {
+#wntwpltyvw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -812,7 +818,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 5px;
 }
 
-#eiogpxcdrx .gt_sourcenotes {
+#wntwpltyvw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -826,7 +832,7 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   border-right-color: #D3D3D3;
 }
 
-#eiogpxcdrx .gt_sourcenote {
+#wntwpltyvw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -834,72 +840,72 @@ Table&nbsp;3.1: Ice-T 与 Spike 的因果图。 对于这两个人，我们各�
   padding-right: 5px;
 }
 
-#eiogpxcdrx .gt_left {
+#wntwpltyvw .gt_left {
   text-align: left;
 }
 
-#eiogpxcdrx .gt_center {
+#wntwpltyvw .gt_center {
   text-align: center;
 }
 
-#eiogpxcdrx .gt_right {
+#wntwpltyvw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eiogpxcdrx .gt_font_normal {
+#wntwpltyvw .gt_font_normal {
   font-weight: normal;
 }
 
-#eiogpxcdrx .gt_font_bold {
+#wntwpltyvw .gt_font_bold {
   font-weight: bold;
 }
 
-#eiogpxcdrx .gt_font_italic {
+#wntwpltyvw .gt_font_italic {
   font-style: italic;
 }
 
-#eiogpxcdrx .gt_super {
+#wntwpltyvw .gt_super {
   font-size: 65%;
 }
 
-#eiogpxcdrx .gt_footnote_marks {
+#wntwpltyvw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#eiogpxcdrx .gt_asterisk {
+#wntwpltyvw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eiogpxcdrx .gt_indent_1 {
+#wntwpltyvw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eiogpxcdrx .gt_indent_2 {
+#wntwpltyvw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eiogpxcdrx .gt_indent_3 {
+#wntwpltyvw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eiogpxcdrx .gt_indent_4 {
+#wntwpltyvw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eiogpxcdrx .gt_indent_5 {
+#wntwpltyvw .gt_indent_5 {
   text-indent: 25px;
 }
 
-#eiogpxcdrx .katex-display {
+#wntwpltyvw .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#eiogpxcdrx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#wntwpltyvw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

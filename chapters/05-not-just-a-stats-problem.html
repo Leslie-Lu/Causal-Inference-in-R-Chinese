@@ -1,0 +1,3929 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; 因果推断不（只是）一个统计问题 – Causal Inference in R 中文版</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/99-references.html" rel="next">
+<link href="../chapters/04-dags.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-70b517d90594a4851645b603711cfd4a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script defer="" data-domain="r-causal.org" src="https://plausible.io/js/script.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/05-not-just-a-stats-problem.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Causal Inference in R 中文版</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">前言</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">提出因果问题</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-casual-to-causal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">从随意推断（casual inference）到因果推断（causal inference）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-whole-game.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">全流程：蚊帐与疟疾</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-po-counterfactuals.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">潜在结局与反事实</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-dags.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-not-just-a-stats-problem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">参考文献</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#因果四重奏" id="toc-因果四重奏" class="nav-link active" data-scroll-target="#因果四重奏"><span class="header-section-number">5.1</span> 因果四重奏</a></li>
+  <li><a href="#将时间作为判断因果结构的启发式依据" id="toc-将时间作为判断因果结构的启发式依据" class="nav-link" data-scroll-target="#将时间作为判断因果结构的启发式依据"><span class="header-section-number">5.2</span> 将时间作为判断因果结构的启发式依据</a></li>
+  <li><a href="#sec-causal-pred-revisit" id="toc-sec-causal-pred-revisit" class="nav-link" data-scroll-target="#sec-causal-pred-revisit"><span class="header-section-number">5.3</span> 再谈因果模型与预测模型</a>
+  <ul class="collapse">
+  <li><a href="#预测指标" id="toc-预测指标" class="nav-link" data-scroll-target="#预测指标"><span class="header-section-number">5.3.1</span> 预测指标</a></li>
+  <li><a href="#表二谬误06-not-just-a-stats-problem-3" id="toc-表二谬误06-not-just-a-stats-problem-3" class="nav-link" data-scroll-target="#表二谬误06-not-just-a-stats-problem-3"><span class="header-section-number">5.3.2</span> 表二谬误</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/edit/main/chapters/05-not-just-a-stats-problem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-casual-to-causal.html">提出因果问题</a></li><li class="breadcrumb-item"><a href="../chapters/05-not-just-a-stats-problem.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-quartets" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">因果推断不（只是）一个统计问题</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="cell-output-display">
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>正在进行中 🚧
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>您正在阅读 <em>Causal Inference in R 中文版</em>的第一版草稿。本章节大部分已经完成，但我们可能会进行一些小的调整或文字编辑。</p>
+</div>
+</div>
+</div>
+</div>
+<section id="因果四重奏" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="因果四重奏"><span class="header-section-number">5.1</span> 因果四重奏</h2>
+<p>现在我们已经具备了相应工具，可以考察本书迄今一直暗示的一件事：因果推断不（只是）一个统计问题。 当然，我们使用统计学回答因果问题。 回答大多数问题都离不开统计学，即使所用统计方法很基础（随机化设计中往往如此）。 然而，仅凭统计学无法处理因果推断的所有假设。</p>
+<p>1973 年，Francis Anscombe提出了一组由四个数据集构成的数据，称为<strong>安斯库姆四重奏</strong>。 这些数据揭示了一个重要教训：仅靠汇总统计量无法理解数据，还必须将数据可视化。 在 <a href="#fig-anscombe" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> 的图中，每个数据集都有极其相似的汇总统计量，包括几乎完全相同的均值和相关系数。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quartets)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>anscombe_quartet <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-anscombe" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-anscombe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-anscombe-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-anscombe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: 安斯库姆四重奏，由四个汇总统计量几乎相同的数据集组成。Anscombe 想要说明的是，要理解数据就必须将其可视化。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>数据龙十二组</strong>是安斯库姆四重奏的现代版本。 各数据集的均值、标准差和相关系数几乎完全相同，但可视化结果大相径庭。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(datasauRus)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># roughly the same correlation in each dataset</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>datasaurus_dozen <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">cor =</span> <span class="fu">round</span>(<span class="fu">cor</span>(x, y), <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 2
+   dataset      cor
+   &lt;chr&gt;      &lt;dbl&gt;
+ 1 away       -0.06
+ 2 bullseye   -0.07
+ 3 circle     -0.07
+ 4 dino       -0.06
+ 5 dots       -0.06
+ 6 h_lines    -0.06
+ 7 high_lines -0.07
+ 8 slant_down -0.07
+ 9 slant_up   -0.07
+10 star       -0.06
+11 v_lines    -0.07
+12 wide_lines -0.07
+13 x_shape    -0.07</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datasaurus_dozen <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-datasaurus" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-datasaurus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-datasaurus-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-datasaurus-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: 数据龙十二组，一组汇总统计量几乎相同的数据集。它是安斯库姆四重奏的现代版本。实际上有 13 组，不过谁会认真数呢？
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>然而，在因果推断中，即使可视化也不足以厘清因果效应。 正如 <a href="03-po-counterfactuals.html" class="quarto-xref"><span>Chapter 3</span></a> 和 <a href="04-dags.html" class="quarto-xref"><span>Chapter 4</span></a> 所示，要从相关性推断因果关系，需要依赖基于背景知识且无法验证的假设 <span class="citation" data-cites="onthei1999">(<a href="99-references.html#ref-onthei1999" role="doc-biblioref">Robins and Wasserman 1999</a>)</span>。</p>
+<p>受安斯库姆四重奏启发，<strong>因果四重奏</strong>具有安斯库姆四重奏和数据龙十二组的许多相同性质：各数据集中变量的数值摘要相同 <span class="citation" data-cites="dagostinomcgowan2023">(<a href="99-references.html#ref-dagostinomcgowan2023" role="doc-biblioref">D’Agostino McGowan et al. 2023</a>)</span>。 不同的是，因果四重奏在视觉上也<em>彼此相同</em>。 差异在于生成各数据集的因果结构。 <a href="#fig-causal_quartet_hidden" class="quarto-xref">Figure&nbsp;<span>5.3</span></a> 展示了四个数据集，其中 <code>exposure</code> 与 <code>outcome</code> 的观察关系几乎完全相同。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># hide the dataset names</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dataset =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(dataset))) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">exposure =</span> <span class="fu">scale</span>(exposure), <span class="at">outcome =</span> <span class="fu">scale</span>(outcome)) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(exposure, outcome)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-causal_quartet_hidden" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-causal_quartet_hidden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-causal_quartet_hidden-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-causal_quartet_hidden-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.3: 因果四重奏，由四个汇总统计量和可视化结果几乎相同的数据集组成。每个数据集的因果结构不同，仅凭数据无法分辨各自属于哪种结构。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>对于每个数据集，问题都是是否应调整第三个变量 <code>covariate</code>。 <code>covariate</code> 是混杂因素吗？ 是中介变量？ 还是碰撞点？ 我们无法利用数据本身解决这个问题。 在 <a href="#tbl-quartet_lm" class="quarto-xref">Table&nbsp;<span>5.1</span></a> 中，无法判断哪个效应才是正确的。 同样，<code>exposure</code> 与 <code>covariate</code> 之间的相关性也无济于事：它们全都相同！</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>effects <span class="ot">&lt;-</span> causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest_by</span>(<span class="at">dataset =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(dataset))) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ate_x =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> data))[<span class="dv">2</span>],</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ate_xz =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(outcome <span class="sc">~</span> exposure <span class="sc">+</span> covariate, <span class="at">data =</span> data))[<span class="dv">2</span>],</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cor =</span> <span class="fu">cor</span>(data<span class="sc">$</span>exposure, data<span class="sc">$</span>covariate)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data, dataset) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(effects) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span>dataset) <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">"Dataset"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ate_x =</span> <span class="fu">md</span>(<span class="st">"Not adjusting for `covariate`"</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ate_xz =</span> <span class="fu">md</span>(<span class="st">"Adjusting for `covariate`"</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cor =</span> <span class="fu">md</span>(<span class="st">"Correlation of `exposure` and `covariate`"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-quartet_lm" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-quartet_lm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="tojuctxkta" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tojuctxkta table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tojuctxkta thead, #tojuctxkta tbody, #tojuctxkta tfoot, #tojuctxkta tr, #tojuctxkta td, #tojuctxkta th {
+  border-style: none;
+}
+
+#tojuctxkta p {
+  margin: 0;
+  padding: 0;
+}
+
+#tojuctxkta .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tojuctxkta .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tojuctxkta .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tojuctxkta .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tojuctxkta .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tojuctxkta .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tojuctxkta .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tojuctxkta .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tojuctxkta .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tojuctxkta .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tojuctxkta .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tojuctxkta .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tojuctxkta .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tojuctxkta .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tojuctxkta .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojuctxkta .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tojuctxkta .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tojuctxkta .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tojuctxkta .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojuctxkta .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tojuctxkta .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojuctxkta .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tojuctxkta .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojuctxkta .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tojuctxkta .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojuctxkta .gt_left {
+  text-align: left;
+}
+
+#tojuctxkta .gt_center {
+  text-align: center;
+}
+
+#tojuctxkta .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tojuctxkta .gt_font_normal {
+  font-weight: normal;
+}
+
+#tojuctxkta .gt_font_bold {
+  font-weight: bold;
+}
+
+#tojuctxkta .gt_font_italic {
+  font-style: italic;
+}
+
+#tojuctxkta .gt_super {
+  font-size: 65%;
+}
+
+#tojuctxkta .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tojuctxkta .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tojuctxkta .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tojuctxkta .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tojuctxkta .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tojuctxkta .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tojuctxkta .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tojuctxkta .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tojuctxkta div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="dataset" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Dataset</th>
+<th id="ate_x" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Not adjusting for <code>covariate</code></th>
+<th id="ate_xz" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adjusting for <code>covariate</code></th>
+<th id="cor" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Correlation of <code>exposure</code> and <code>covariate</code></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="dataset">1</td>
+<td class="gt_row gt_right" headers="ate_x">1.00</td>
+<td class="gt_row gt_right" headers="ate_xz">0.55</td>
+<td class="gt_row gt_right" headers="cor">0.70</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="dataset">2</td>
+<td class="gt_row gt_right" headers="ate_x">1.00</td>
+<td class="gt_row gt_right" headers="ate_xz">0.50</td>
+<td class="gt_row gt_right" headers="cor">0.70</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="dataset">3</td>
+<td class="gt_row gt_right" headers="ate_x">1.00</td>
+<td class="gt_row gt_right" headers="ate_xz">0.00</td>
+<td class="gt_row gt_right" headers="cor">0.70</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="dataset">4</td>
+<td class="gt_row gt_right" headers="ate_x">1.00</td>
+<td class="gt_row gt_right" headers="ate_xz">0.88</td>
+<td class="gt_row gt_right" headers="cor">0.70</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-quartet_lm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.1: 因果四重奏中，调整和不调整 <code>covariate</code> 时 <code>exposure</code> 对 <code>outcome</code> 的估计效应。四个数据集的未调整估计完全相同，<code>exposure</code> 与 <code>covariate</code> 的相关系数也相同，但调整后估计各不相同。缺乏背景知识时，无法判断哪个正确。
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="callout callout-style-simple callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>百分之十规则
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>百分之十规则是流行病学及其他领域判断变量是否为混杂因素的一种常用方法。 该规则认为，如果纳入某变量会使效应估计改变超过 10%，就应将其纳入模型。 问题在于，这种方法并不奏效。 因果四重奏中的<em>每个</em>示例都会造成超过 10% 的变化。 正如我们所知，这会在某些数据集中导致错误答案。 即使采用相反方法，即变化<em>小于</em> 10% 时<em>排除</em>变量，也可能产生问题，因为许多轻微混杂效应累积起来可能造成更大的偏倚。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>effects <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent_change =</span> scales<span class="sc">::</span><span class="fu">percent</span>((ate_x <span class="sc">-</span> ate_xz) <span class="sc">/</span> ate_x)) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dataset, percent_change) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">"Dataset"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent_change =</span> <span class="st">"Percent change"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-quartet_ten_percent" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-quartet_ten_percent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="dhthusydri" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dhthusydri table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dhthusydri thead, #dhthusydri tbody, #dhthusydri tfoot, #dhthusydri tr, #dhthusydri td, #dhthusydri th {
+  border-style: none;
+}
+
+#dhthusydri p {
+  margin: 0;
+  padding: 0;
+}
+
+#dhthusydri .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dhthusydri .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dhthusydri .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dhthusydri .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dhthusydri .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dhthusydri .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dhthusydri .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dhthusydri .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dhthusydri .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dhthusydri .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dhthusydri .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dhthusydri .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dhthusydri .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dhthusydri .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dhthusydri .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dhthusydri .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dhthusydri .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dhthusydri .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dhthusydri .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dhthusydri .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dhthusydri .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dhthusydri .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dhthusydri .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dhthusydri .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dhthusydri .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dhthusydri .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dhthusydri .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dhthusydri .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dhthusydri .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dhthusydri .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dhthusydri .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dhthusydri .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dhthusydri .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dhthusydri .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dhthusydri .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dhthusydri .gt_left {
+  text-align: left;
+}
+
+#dhthusydri .gt_center {
+  text-align: center;
+}
+
+#dhthusydri .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dhthusydri .gt_font_normal {
+  font-weight: normal;
+}
+
+#dhthusydri .gt_font_bold {
+  font-weight: bold;
+}
+
+#dhthusydri .gt_font_italic {
+  font-style: italic;
+}
+
+#dhthusydri .gt_super {
+  font-size: 65%;
+}
+
+#dhthusydri .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dhthusydri .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dhthusydri .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dhthusydri .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dhthusydri .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dhthusydri .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dhthusydri .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#dhthusydri .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dhthusydri div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="dataset" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Dataset</th>
+<th id="percent_change" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Percent change</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="dataset">1</td>
+<td class="gt_row gt_right" headers="percent_change">44.6%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="dataset">2</td>
+<td class="gt_row gt_right" headers="percent_change">49.7%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="dataset">3</td>
+<td class="gt_row gt_right" headers="percent_change">99.8%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="dataset">4</td>
+<td class="gt_row gt_right" headers="percent_change">12.5%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-quartet_ten_percent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.2: 模型纳入 <code>covariate</code> 后，<code>exposure</code> 系数的百分比变化。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>尽管 <code>covariate</code> 与 <code>exposure</code> 的视觉关系在各数据集间并不相同，但它们的相关系数均相同。 在 <a href="#fig-causal_quartet_covariate" class="quarto-xref">Figure&nbsp;<span>5.4</span></a> 中，二者的标准化关系完全相同。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># hide the dataset names</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dataset =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(dataset))) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">cor =</span> <span class="fu">round</span>(<span class="fu">cor</span>(covariate, exposure), <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  dataset   cor
+    &lt;int&gt; &lt;dbl&gt;
+1       1   0.7
+2       2   0.7
+3       3   0.7
+4       4   0.7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># hide the dataset names</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dataset =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(dataset))) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">scale</span>(covariate), <span class="at">exposure =</span> <span class="fu">scale</span>(exposure)) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(covariate, exposure)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-causal_quartet_covariate" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-causal_quartet_covariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-causal_quartet_covariate-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-causal_quartet_covariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: <code>exposure</code> 与 <code>covariate</code> 的标准化关系。我们仍然没有足够信息判断 <code>covariate</code> 是混杂因素、中介变量还是碰撞点。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>为什么要对系数进行标准化？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>像 <code>scale()</code> 所做的那样，将数值变量标准化为均值 0、标准差 1，是统计学中的常用技术。 标准化有多种用途；这里选择缩放变量，是为了突出每个数据集中 <code>covariate</code> 与 <code>exposure</code> 的相关系数完全相同。 如果不缩放变量，相关系数仍相同，但由于标准差不同，图形看起来会有所差异。 普通最小二乘（OLS）模型中的 beta 系数利用协方差和变量标准差计算，因此缩放后，该系数会与 Pearson 相关系数相同。</p>
+<p><a href="#fig-causal_quartet_covariate_unscaled" class="quarto-xref">Figure&nbsp;<span>5.5</span></a> 展示了 <code>covariate</code> 与 <code>exposure</code> 未经缩放的关系。 现在可以看到一些差异：数据集 4 中 <code>covariate</code> 的方差似乎更大，但这并不是可据以采取行动的信息。 事实上，它只是数据生成过程产生的数学伪象。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># hide the dataset names</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dataset =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(dataset))) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(covariate, exposure)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-causal_quartet_covariate_unscaled" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-causal_quartet_covariate_unscaled-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-causal_quartet_covariate_unscaled-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-causal_quartet_covariate_unscaled-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.5: 未经缩放的 <a href="#fig-causal_quartet_covariate" class="quarto-xref">Figure&nbsp;<span>5.4</span></a>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>让我们揭示代表各数据集因果结构的标签。 在 <a href="#fig-causal_quartet" class="quarto-xref">Figure&nbsp;<span>5.6</span></a> 中，<code>covariate</code> 在每个数据集中扮演不同角色。 在数据集 1 和 4 中，它是碰撞点（我们<em>不应</em>调整它）。 在数据集 2 中，它是混杂因素（我们<em>应当</em>调整它）。 在数据集 3 中，它是中介变量（是否调整取决于研究问题）。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(exposure, outcome)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-causal_quartet" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-causal_quartet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-causal_quartet-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-causal_quartet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.6: 揭示后的因果四重奏。第一个和最后一个数据集属于碰撞偏倚，不应控制 <code>covariate</code>。第二个数据集中，<code>covariate</code> 是混杂因素，应当控制它。第三个数据集中，<code>covariate</code> 是中介变量；若关注直接效应则应控制它，若关注总效应则不应控制。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>如果数据无法区分这些因果结构，该怎么办？ 最佳答案是充分了解数据生成机制。 <a href="#fig-quartet-dag" class="quarto-xref">Figure&nbsp;<span>5.7</span></a> 展示了每个数据集的 DAG。 一旦为每个数据集构建 DAG，在假设 DAG 正确的前提下，只需查询 DAG 得到正确调整集。</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>d_coll <span class="ot">&lt;-</span> <span class="fu">quartet_collider</span>(<span class="at">x =</span> <span class="st">"e"</span>, <span class="at">y =</span> <span class="st">"o"</span>, <span class="at">z =</span> <span class="st">"c"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>d_conf <span class="ot">&lt;-</span> <span class="fu">quartet_confounder</span>(<span class="at">x =</span> <span class="st">"e"</span>, <span class="at">y =</span> <span class="st">"o"</span>, <span class="at">z =</span> <span class="st">"c"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>d_med <span class="ot">&lt;-</span> <span class="fu">quartet_mediator</span>(<span class="at">x =</span> <span class="st">"e"</span>, <span class="at">y =</span> <span class="st">"o"</span>, <span class="at">z =</span> <span class="st">"c"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>d_mbias <span class="ot">&lt;-</span> <span class="fu">quartet_m_bias</span>(<span class="at">x =</span> <span class="st">"e"</span>, <span class="at">y =</span> <span class="st">"o"</span>, <span class="at">z =</span> <span class="st">"c"</span>, <span class="at">u1 =</span> <span class="st">"u1"</span>, <span class="at">u2 =</span> <span class="st">"u2"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>p_coll <span class="ot">&lt;-</span> d_coll <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c"</span>, <span class="st">"covariate"</span>, <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"(1) Collider"</span>) <span class="sc">+</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>p_conf <span class="ot">&lt;-</span> d_conf <span class="sc">|&gt;</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c"</span>, <span class="st">"covariate"</span>, <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"(2) Confounder"</span>) <span class="sc">+</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>p_med <span class="ot">&lt;-</span> d_med <span class="sc">|&gt;</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c"</span>, <span class="st">"covariate"</span>, <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"(3) Mediator"</span>) <span class="sc">+</span></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>p_m_bias <span class="ot">&lt;-</span> d_mbias <span class="sc">|&gt;</span></span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c"</span>, <span class="st">"covariate"</span>, <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"(4) M-bias"</span>) <span class="sc">+</span></span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>p_coll</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>p_conf</span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>p_med</span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>p_m_bias</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-quartet-dag" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-quartet-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartet-dag" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartet-dag-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartet-dag-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet-dag-1.png" class="img-fluid figure-img" data-ref-parent="fig-quartet-dag" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartet-dag-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) 数据集 1 的 DAG，其中 <code>covariate</code>（c）是碰撞点。<code>covariate</code> 是 <code>exposure</code>（e）和 <code>outcome</code>（o）的后代，因此不应调整它。
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartet-dag" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartet-dag-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartet-dag-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet-dag-2.png" class="img-fluid figure-img" data-ref-parent="fig-quartet-dag" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartet-dag-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) 数据集 2 的 DAG，其中 <code>covariate</code>（c）是混杂因素。<code>covariate</code> 是 <code>exposure</code>（e）和 <code>outcome</code>（o）的共同原因，构成一条后门路径，因此必须调整它才能得到正确答案。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartet-dag" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartet-dag-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartet-dag-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet-dag-3.png" class="img-fluid figure-img" data-ref-parent="fig-quartet-dag" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartet-dag-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) 数据集 3 的 DAG，其中 <code>covariate</code>（c）是中介变量。<code>covariate</code> 是 <code>exposure</code>（e）的后代，也是 <code>outcome</code>（o）的原因。经过 <code>covariate</code> 的路径是间接路径，经过 <code>exposure</code> 的路径是直接路径。若关注直接效应则应调整 <code>covariate</code>，若关注总效应则不应调整。
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartet-dag" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartet-dag-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartet-dag-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet-dag-4.png" class="img-fluid figure-img" data-ref-parent="fig-quartet-dag" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartet-dag-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) 数据集 4 的 DAG，其中 <code>covariate</code>（c）通过 M 偏倚成为碰撞点。尽管 <code>covariate</code> 先于 <code>outcome</code>（o）和 <code>exposure</code>（e）发生，它仍是碰撞点。不应调整 <code>covariate</code>，尤其因为 <code>u1</code> 和 <code>u2</code> 未被测量，无法控制经二者产生的偏倚。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quartet-dag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.7: 因果四重奏的 DAG。
+</figcaption>
+</figure>
+</div>
+<p>DAG 中的数据生成机制<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>与生成这些数据集的机制相符，因此可以使用 DAG 确定正确效应：数据集 1 和 4 使用未调整效应，数据集 2 使用调整后效应。 对于数据集 3，则取决于所关注的中介效应：直接效应需要调整，总效应不需要调整。</p>
+<div class="cell">
+<div id="tbl-quartets_true_effects" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-quartets_true_effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="rhvijcynhm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rhvijcynhm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rhvijcynhm thead, #rhvijcynhm tbody, #rhvijcynhm tfoot, #rhvijcynhm tr, #rhvijcynhm td, #rhvijcynhm th {
+  border-style: none;
+}
+
+#rhvijcynhm p {
+  margin: 0;
+  padding: 0;
+}
+
+#rhvijcynhm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rhvijcynhm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rhvijcynhm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rhvijcynhm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rhvijcynhm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rhvijcynhm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rhvijcynhm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rhvijcynhm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rhvijcynhm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rhvijcynhm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rhvijcynhm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rhvijcynhm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rhvijcynhm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rhvijcynhm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rhvijcynhm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rhvijcynhm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rhvijcynhm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rhvijcynhm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rhvijcynhm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rhvijcynhm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rhvijcynhm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rhvijcynhm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rhvijcynhm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rhvijcynhm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rhvijcynhm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rhvijcynhm .gt_left {
+  text-align: left;
+}
+
+#rhvijcynhm .gt_center {
+  text-align: center;
+}
+
+#rhvijcynhm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rhvijcynhm .gt_font_normal {
+  font-weight: normal;
+}
+
+#rhvijcynhm .gt_font_bold {
+  font-weight: bold;
+}
+
+#rhvijcynhm .gt_font_italic {
+  font-style: italic;
+}
+
+#rhvijcynhm .gt_super {
+  font-size: 65%;
+}
+
+#rhvijcynhm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rhvijcynhm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rhvijcynhm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rhvijcynhm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rhvijcynhm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rhvijcynhm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rhvijcynhm .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rhvijcynhm .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rhvijcynhm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Data-generating-mechanism" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Data generating mechanism</th>
+<th id="Correct-causal-model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Correct causal model</th>
+<th id="Correct-causal-effect" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Correct causal effect</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Data generating mechanism">(1) Collider</td>
+<td class="gt_row gt_left" headers="Correct causal model">outcome ~ exposure</td>
+<td class="gt_row gt_left" headers="Correct causal effect">1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Data generating mechanism">(2) Confounder</td>
+<td class="gt_row gt_left" headers="Correct causal model">outcome ~ exposure; covariate</td>
+<td class="gt_row gt_left" headers="Correct causal effect">0.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Data generating mechanism">(3) Mediator</td>
+<td class="gt_row gt_left" headers="Correct causal model">Direct effect: outcome ~ exposure; covariate, Total Effect: outcome ~ exposure</td>
+<td class="gt_row gt_left" headers="Correct causal effect">Direct effect: 0, Total effect: 1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Data generating mechanism">(4) M-Bias</td>
+<td class="gt_row gt_left" headers="Correct causal model">outcome ~ exposure</td>
+<td class="gt_row gt_left" headers="Correct causal effect">1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-quartets_true_effects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.3: 每个数据集的数据生成机制和真实因果效应。根据具体机制和问题，未调整效应有时与真实效应相同，有时则不同。
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="将时间作为判断因果结构的启发式依据" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="将时间作为判断因果结构的启发式依据"><span class="header-section-number">5.2</span> 将时间作为判断因果结构的启发式依据</h2>
+<p>希望我们已经让你相信 DAG 的用处。 不过，构建正确的 DAG 是一项具有挑战性的工作。 在因果四重奏中，由于数据由我们生成，因此知道相应的 DAG。 现实中，我们需要背景知识来构建候选因果结构。 对于某些问题，这类背景知识并不存在。 对于另一些问题，我们可能担心因果结构的复杂性，尤其是变量像 <a href="04-dags.html#fig-feedback-loop" class="quarto-xref">Figure&nbsp;<span>4.28</span></a> 那样彼此共同演化时。</p>
+<p>当 DAG 不完整或存在不确定性时，有一种启发式依据特别有用：时间。 由于因果关系具有时间性，原因必须先于结果发生。 只需按时间顺序排列变量，就能解决许多（但并非全部）有关是否应调整混杂因素的问题。 时间顺序也是 DAG 能够可视化的最关键假设之一，因此无论 DAG 是否完整，它都是极好的起点。</p>
+<p>考虑 <a href="#fig-quartets-time-ordered-1" class="quarto-xref">Figure&nbsp;<span>5.8 (a)</span></a>，这是碰撞点 DAG 的时间排序版本，其中协变量在基线和随访时均被测量。 原始 DAG 实际表示<em>第二次</em>测量，此时协变量是结局和暴露的共同后代。 然而，如果控制研究开始时测量的同一协变量（<a href="#fig-quartets-time-ordered-2" class="quarto-xref">Figure&nbsp;<span>5.8 (b)</span></a>），它就不可能是随访结局的后代，因为随访结局尚未发生。 因此，当缺乏有关协变量因果结构的背景知识时，可以把时间排序作为避免偏倚的防御性措施。 只控制先于结局发生的变量。</p>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d_coll <span class="ot">&lt;-</span> <span class="fu">quartet_time_collider</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x0 =</span> <span class="st">"e0"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="st">"e1"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="st">"e2"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x3 =</span> <span class="st">"e3"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y1 =</span> <span class="st">"o1"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">y2 =</span> <span class="st">"o2"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y3 =</span> <span class="st">"o3"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">z1 =</span> <span class="st">"c1"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">z2 =</span> <span class="st">"c2"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">z3 =</span> <span class="st">"c3"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>d_coll <span class="sc">|&gt;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c3"</span>, <span class="st">"covariate</span><span class="sc">\n</span><span class="st">(follow-up)"</span>, <span class="cn">NA_character_</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="fl">2.6</span>, <span class="fl">3.25</span>, <span class="fl">3.6</span>, <span class="fl">4.25</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey60"</span>) <span class="sc">+</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> <span class="fl">2.925</span>, <span class="at">y =</span> <span class="fl">0.97</span>, <span class="at">label =</span> <span class="st">"baseline"</span>, <span class="at">color =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"label"</span>,</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.925</span>,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fl">0.97</span>,</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"follow-up"</span>,</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"grey50"</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate</span><span class="sc">\n</span><span class="st">(follow-up)"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>d_coll <span class="sc">|&gt;</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariate =</span> <span class="fu">if_else</span>(label <span class="sc">==</span> <span class="st">"c2"</span>, <span class="st">"covariate</span><span class="sc">\n</span><span class="st">(baseline)"</span>, <span class="cn">NA_character_</span>)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="fl">2.6</span>, <span class="fl">3.25</span>, <span class="fl">3.6</span>, <span class="fl">4.25</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey60"</span>) <span class="sc">+</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> <span class="fl">2.925</span>, <span class="at">y =</span> <span class="fl">0.97</span>, <span class="at">label =</span> <span class="st">"baseline"</span>, <span class="at">color =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>    <span class="st">"label"</span>,</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.925</span>,</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fl">0.97</span>,</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"follow-up"</span>,</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"grey50"</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate</span><span class="sc">\n</span><span class="st">(baseline)"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-quartets-time-ordered" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-quartets-time-ordered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartets-time-ordered" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartets-time-ordered-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartets-time-ordered-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartets-time-ordered-1.png" class="img-fluid figure-img" data-ref-parent="fig-quartets-time-ordered" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartets-time-ordered-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) 在碰撞点 DAG 的时间排序版本中，控制随访时的协变量会诱发偏倚。
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-quartets-time-ordered" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-quartets-time-ordered-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-quartets-time-ordered-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartets-time-ordered-2.png" class="img-fluid figure-img" data-ref-parent="fig-quartets-time-ordered" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-quartets-time-ordered-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) 相反，控制基线测量的协变量不会诱发偏倚，因为它不是结局的后代。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quartets-time-ordered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.8: 碰撞点 DAG 的时间排序版本，每个变量均测量两次。控制随访时的 <code>covariate</code> 相当于控制碰撞点，但控制基线时的 <code>covariate</code> 则不是。
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-warning">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>时间排序启发法依赖一条简单规则：不要调整未来变量。</p>
+</div>
+</div>
+</div>
+<p>quartet 包中的 <code>causal_quartet_time</code> 包含四个数据集中各变量按时间排序的测量值。 每个变量都有 <code>*_baseline</code> 和 <code>*_follow-up</code> 测量。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>causal_quartet_time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 400 × 12
+   covariate_baseline exposure_baseline
+                &lt;dbl&gt;             &lt;dbl&gt;
+ 1            -0.0963          -1.43   
+ 2            -1.11             0.0593 
+ 3             0.647            0.370  
+ 4             0.755            0.00471
+ 5             1.19             0.340  
+ 6            -0.588           -3.61   
+ 7            -1.13             1.44   
+ 8             0.689            1.02   
+ 9            -1.49            -2.43   
+10            -2.78            -1.26   
+# ℹ 390 more rows
+# ℹ 10 more variables: outcome_baseline &lt;dbl&gt;,
+#   covariate_followup &lt;dbl&gt;, exposure_followup &lt;dbl&gt;,
+#   outcome_followup &lt;dbl&gt;, exposure_mid &lt;dbl&gt;,
+#   covariate_mid &lt;dbl&gt;, outcome_mid &lt;dbl&gt;, u1 &lt;dbl&gt;,
+#   u2 &lt;dbl&gt;, dataset &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>公式 <code>outcome_followup ~ exposure_baseline + covariate_baseline</code> 对四个数据集中的三个有效。 尽管 <code>covariate_baseline</code> 只在第二个数据集的调整集中，但在另外两个数据集中它并非碰撞点，因此不会造成问题。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>causal_quartet_time <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">adjusted_effect =</span> <span class="fu">coef</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        outcome_followup <span class="sc">~</span> exposure_baseline <span class="sc">+</span> covariate_baseline,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">2</span>]</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">tibble</span>(<span class="at">truth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">1</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>data, dataset) <span class="sc">|&gt;</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"Dataset"</span>, <span class="st">"Adjusted effect"</span>, <span class="st">"Truth"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="sc">-</span>Dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-quartet_time_adjusted" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-quartet_time_adjusted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="ymoowhowmj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ymoowhowmj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ymoowhowmj thead, #ymoowhowmj tbody, #ymoowhowmj tfoot, #ymoowhowmj tr, #ymoowhowmj td, #ymoowhowmj th {
+  border-style: none;
+}
+
+#ymoowhowmj p {
+  margin: 0;
+  padding: 0;
+}
+
+#ymoowhowmj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ymoowhowmj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ymoowhowmj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ymoowhowmj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ymoowhowmj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ymoowhowmj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ymoowhowmj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ymoowhowmj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ymoowhowmj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ymoowhowmj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ymoowhowmj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ymoowhowmj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ymoowhowmj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ymoowhowmj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ymoowhowmj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ymoowhowmj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ymoowhowmj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ymoowhowmj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ymoowhowmj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ymoowhowmj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ymoowhowmj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ymoowhowmj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ymoowhowmj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ymoowhowmj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ymoowhowmj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ymoowhowmj .gt_left {
+  text-align: left;
+}
+
+#ymoowhowmj .gt_center {
+  text-align: center;
+}
+
+#ymoowhowmj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ymoowhowmj .gt_font_normal {
+  font-weight: normal;
+}
+
+#ymoowhowmj .gt_font_bold {
+  font-weight: bold;
+}
+
+#ymoowhowmj .gt_font_italic {
+  font-style: italic;
+}
+
+#ymoowhowmj .gt_super {
+  font-size: 65%;
+}
+
+#ymoowhowmj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ymoowhowmj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ymoowhowmj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ymoowhowmj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ymoowhowmj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ymoowhowmj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ymoowhowmj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ymoowhowmj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ymoowhowmj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Dataset" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Dataset</th>
+<th id="Adjusted-effect" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Adjusted effect</th>
+<th id="Truth" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Truth</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Dataset">(1) Collider</td>
+<td class="gt_row gt_right" headers="Adjusted effect">1.00</td>
+<td class="gt_row gt_right" headers="Truth">1.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Dataset">(2) Confounder</td>
+<td class="gt_row gt_right" headers="Adjusted effect">0.50</td>
+<td class="gt_row gt_right" headers="Truth">0.50</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Dataset">(3) Mediator</td>
+<td class="gt_row gt_right" headers="Adjusted effect">1.00</td>
+<td class="gt_row gt_right" headers="Truth">1.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Dataset">(4) M-Bias</td>
+<td class="gt_row gt_right" headers="Adjusted effect">0.88</td>
+<td class="gt_row gt_right" headers="Truth">1.00</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-quartet_time_adjusted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.4: 各数据集中 <code>exposure_baseline</code> 对 <code>outcome_followup</code> 的调整后效应。对 <code>covariate_baseline</code> 调整所得效应，在四个数据集中的三个是正确的。
+</figcaption>
+</figure>
+</div>
+</div>
+<p>该公式在数据集 4，即 M 偏倚示例中失效。 在这种情况下，<code>covariate_baseline</code> 仍是碰撞点，因为碰撞发生在暴露和结局之前。 不过，正如 <a href="04-dags.html#sec-m-bias" class="quarto-xref"><span>Section 4.3.2.1</span></a> 所讨论的，如果不确定某种结构是否真正属于 M 偏倚，调整它通常比不调整更好。 混杂偏倚往往更严重，而具有实际意义的 M 偏倚在现实中可能很少见。 随着实际因果结构偏离完美的 M 偏倚，偏倚的严重程度往往会降低。 因此，如果明确属于 M 偏倚，就不要调整该变量。 如果不明确，则应调整。</p>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>还要记住，在某些情况下可以阻断调整碰撞点所诱发的偏倚，因为碰撞偏倚只是另一条开放路径。 如果拥有 <code>u1</code> 和 <code>u2</code>，就可以在控制 <code>covariate</code> 的同时阻断潜在碰撞偏倚。 换言之，有时打开一条路径后，还可以再次将其闭合。</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-causal-pred-revisit" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-causal-pred-revisit"><span class="header-section-number">5.3</span> 再谈因果模型与预测模型</h2>
+<section id="预测指标" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="预测指标"><span class="header-section-number">5.3.1</span> 预测指标</h3>
+<p>预测度量同样无法区分这四个数据集。 <a href="#tbl-quartet_time_predictive" class="quarto-xref">Table&nbsp;<span>5.5</span></a> 展示了模型加入 <code>covariate</code> 后，几个标准预测指标的变化。 在每个数据集中，<code>covariate</code> 都为模型增加了信息，因为它包含有关结局的关联信息 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。 RMSE 降低，表明拟合改善；R<sup>2</sup> 升高，表明解释了更多方差。 <code>covariate</code> 的系数代表其包含的有关 <code>outcome</code> 的信息，却无法说明该信息来自因果结构中的何处。 相关不等于因果，预测也不等于因果。 对于碰撞点数据集，它甚至不是有用的预测工具，因为 <code>covariate</code> 发生在暴露和结局之后，进行预测时尚无法获得该变量。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>get_rmse <span class="ot">&lt;-</span> <span class="cf">function</span>(data, model) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">mean</span>((data<span class="sc">$</span>outcome <span class="sc">-</span> <span class="fu">predict</span>(model, data))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>get_r_squared <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(model)<span class="sc">$</span>r.squared</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>causal_quartet <span class="sc">|&gt;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest_by</span>(dataset) <span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse1 =</span> <span class="fu">get_rmse</span>(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      data,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> data)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse2 =</span> <span class="fu">get_rmse</span>(</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>      data,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(outcome <span class="sc">~</span> exposure <span class="sc">+</span> covariate, <span class="at">data =</span> data)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_diff =</span> rmse2 <span class="sc">-</span> rmse1,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">r_squared1 =</span> <span class="fu">get_r_squared</span>(<span class="fu">lm</span>(outcome <span class="sc">~</span> exposure, <span class="at">data =</span> data)),</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">r_squared2 =</span> <span class="fu">get_r_squared</span>(<span class="fu">lm</span>(outcome <span class="sc">~</span> exposure <span class="sc">+</span> covariate, <span class="at">data =</span> data)),</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">r_squared_diff =</span> r_squared2 <span class="sc">-</span> r_squared1</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(dataset, <span class="at">rmse =</span> rmse_diff, <span class="at">r_squared =</span> r_squared_diff) <span class="sc">|&gt;</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">"Dataset"</span>,</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse =</span> <span class="st">"RMSE"</span>,</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">r_squared =</span> <span class="fu">md</span>(<span class="st">"R^2^"</span>)</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-quartet_time_predictive" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-quartet_time_predictive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="zyelxzycnw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zyelxzycnw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zyelxzycnw thead, #zyelxzycnw tbody, #zyelxzycnw tfoot, #zyelxzycnw tr, #zyelxzycnw td, #zyelxzycnw th {
+  border-style: none;
+}
+
+#zyelxzycnw p {
+  margin: 0;
+  padding: 0;
+}
+
+#zyelxzycnw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zyelxzycnw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zyelxzycnw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zyelxzycnw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zyelxzycnw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zyelxzycnw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zyelxzycnw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zyelxzycnw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zyelxzycnw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zyelxzycnw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zyelxzycnw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zyelxzycnw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zyelxzycnw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zyelxzycnw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zyelxzycnw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zyelxzycnw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zyelxzycnw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zyelxzycnw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zyelxzycnw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zyelxzycnw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zyelxzycnw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zyelxzycnw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zyelxzycnw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zyelxzycnw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zyelxzycnw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zyelxzycnw .gt_left {
+  text-align: left;
+}
+
+#zyelxzycnw .gt_center {
+  text-align: center;
+}
+
+#zyelxzycnw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zyelxzycnw .gt_font_normal {
+  font-weight: normal;
+}
+
+#zyelxzycnw .gt_font_bold {
+  font-weight: bold;
+}
+
+#zyelxzycnw .gt_font_italic {
+  font-style: italic;
+}
+
+#zyelxzycnw .gt_super {
+  font-size: 65%;
+}
+
+#zyelxzycnw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zyelxzycnw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zyelxzycnw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zyelxzycnw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zyelxzycnw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zyelxzycnw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zyelxzycnw .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zyelxzycnw .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zyelxzycnw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table cell table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="dataset" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Dataset</th>
+<th id="rmse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
+<th id="r_squared" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">R<sup>2</sup></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="dataset">(1) Collider</td>
+<td class="gt_row gt_right" headers="rmse">−0.14</td>
+<td class="gt_row gt_right" headers="r_squared">0.12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="dataset">(2) Confounder</td>
+<td class="gt_row gt_right" headers="rmse">−0.20</td>
+<td class="gt_row gt_right" headers="r_squared">0.14</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="dataset">(3) Mediator</td>
+<td class="gt_row gt_right" headers="rmse">−0.48</td>
+<td class="gt_row gt_right" headers="r_squared">0.37</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="dataset">(4) M-Bias</td>
+<td class="gt_row gt_right" headers="rmse">−0.01</td>
+<td class="gt_row gt_right" headers="r_squared">0.01</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-quartet_time_predictive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5.5: 各数据集中纳入和不纳入 <code>covariate</code> 时，<code>outcome</code> 预测指标的差异。每个数据集中，<code>covariate</code> 都为模型增加了信息，但这对选择适当的因果模型几乎没有指导意义。
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="表二谬误06-not-just-a-stats-problem-3" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="表二谬误06-not-just-a-stats-problem-3"><span class="header-section-number">5.3.2</span> 表二谬误<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></h3>
+<p>与此相关，除所关注原因以外的其他变量，其模型系数可能难以解释。 在模型 <code>outcome ~ exposure + covariate</code> 中，人们很容易想要同时报告 <code>covariate</code> 和 <code>exposure</code> 的系数。 但正如 <a href="01-casual-to-causal.html#sec-pred-or-explain" class="quarto-xref"><span>Section 1.2.5</span></a> 所讨论的，<code>covariate</code> 对 <code>outcome</code> 效应的因果结构，可能不同于 <code>exposure</code> 对 <code>outcome</code> 效应的因果结构。 让我们考虑加入其他变量后的四重奏 DAG 变体。</p>
+<p>首先从混杂因素 DAG 开始。 在 <a href="#fig-quartet_confounder" class="quarto-xref">Figure&nbsp;<span>5.9</span></a> 中，<code>covariate</code> 是混杂因素。 如果该 DAG 代表 <code>outcome</code> 的完整因果结构，并且满足建模过程的其他假设，那么模型 <code>outcome ~ exposure + covariate</code> 将给出 <code>exposure</code> 对 <code>outcome</code> 效应的无偏估计。 <code>covariate</code> 对 <code>outcome</code> 效应的调整集为空，而且 <code>exposure</code> 不是碰撞点，因此控制它不会诱发偏倚<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>。 但请再看一遍。 对于 <code>covariate</code> 对 <code>outcome</code> 的效应，<code>exposure</code> 是中介变量；部分总效应通过 <code>exposure</code> 中介，同时 <code>covariate</code> 对 <code>outcome</code> 还存在直接效应。 两个估计都是无偏的，但属于不同<em>类型</em>的估计。 <code>exposure</code> 对 <code>outcome</code> 的效应是该关系的<em>总效应</em>，而 <code>covariate</code> 对 <code>outcome</code> 的效应是<em>直接效应</em>。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p_conf <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-quartet_confounder" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-quartet_confounder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet_confounder-1.png" class="img-fluid figure-img" width="288">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quartet_confounder-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.9: 数据集 2 的 DAG，其中 <code>covariate</code> 是混杂因素。仔细观察会发现，从 <code>covariate</code> 对 <code>outcome</code> 效应的角度看，<code>exposure</code> 是一个<em>中介变量</em>。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>如果加入 <code>covariate</code> 和 <code>outcome</code> 的共同原因 <code>q</code>，会怎样？ 在 <a href="#fig-quartet_confounder_q" class="quarto-xref">Figure&nbsp;<span>5.10</span></a> 中，两个调整集仍然不同。 <code>outcome ~ exposure</code> 的调整集仍为 <code>{covariate}</code>。 <code>outcome ~ covariate</code> 的调整集则为 <code>{q}</code>。 换言之，对于 <code>covariate</code> 对 <code>outcome</code> 的效应，<code>q</code> 是混杂因素。 模型 <code>outcome ~ exposure + covariate</code> 会为 <code>exposure</code> 产生正确效应，却无法产生 <code>covariate</code> 的正确直接效应。 此时，<code>covariate</code> 不仅回答与 <code>exposure</code> 不同类型的问题，还因缺少 <code>q</code> 而存在偏倚。</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="at">X =</span> <span class="fl">1.75</span>, <span class="at">Z =</span> <span class="dv">1</span>, <span class="at">Y =</span> <span class="dv">3</span>, <span class="at">Q =</span> <span class="dv">0</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="at">X =</span> <span class="fl">1.1</span>, <span class="at">Z =</span> <span class="fl">1.5</span>, <span class="at">Y =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>d_conf2 <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  X <span class="sc">~</span> Z,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  Y <span class="sc">~</span> X <span class="sc">+</span> Z <span class="sc">+</span> Q,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  Z <span class="sc">~</span> Q,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">exposure =</span> <span class="st">"X"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"Y"</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="at">X =</span> <span class="st">"e"</span>, <span class="at">Y =</span> <span class="st">"o"</span>, <span class="at">Z =</span> <span class="st">"c"</span>, <span class="at">Q =</span> <span class="st">"q"</span>),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> coords</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>p_conf2 <span class="ot">&lt;-</span> d_conf2 <span class="sc">|&gt;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_dagitty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covariate =</span> <span class="fu">if_else</span>(name <span class="sc">==</span> <span class="st">"Q"</span>, <span class="st">"covariate"</span>, <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> covariate)) <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_edges</span>(<span class="at">edge_color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_dag_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">keywidth =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="fl">3.4</span>, <span class="at">shape =</span> <span class="dv">15</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">breaks =</span> <span class="st">"covariate"</span>, <span class="at">na.value =</span> <span class="st">"grey70"</span>)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>p_conf2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-quartet_confounder_q" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-quartet_confounder_q-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-not-just-a-stats-problem_files/figure-html/fig-quartet_confounder_q-1.png" class="img-fluid figure-img" width="336">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quartet_confounder_q-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.10: 数据集 2 DAG 的修改版本，其中 <code>covariate</code> 是混杂因素。现在，<code>covariate</code> 与 <code>outcome</code> 的关系受到 <code>q</code> 的混杂；但计算 <code>exposure</code> 对 <code>outcome</code> 的无偏效应并不需要 <code>q</code>。
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>设定单个因果模型本身就极具挑战。 让单个模型回答多个因果问题，其难度更会成倍增加。 如果尝试这样做，应以同样严格的标准审查两个<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>问题。 是否存在一个能够同时回答两个问题的调整集？ 如果不存在，就应设定两个模型，或放弃其中一个问题。 如果存在，也需要确保估计回答的是正确问题。 我们还将在 <span class="quarto-unresolved-ref">?sec-interaction</span> 中讨论<em>联合</em>因果效应。</p>
+<p>遗憾的是，用于检测多个暴露和效应类型之调整集的算法尚不成熟，因此在确定调整集的交集时，可能需要依赖你对因果结构的了解。</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-dagostinomcgowan2023" class="csl-entry" role="listitem">
+D’Agostino McGowan, Lucy, Travis Gerke, and Malcolm Barrett. 2023. <span>“Causal Inference Is Not Just a Statistics Problem.”</span> <em>Journal of Statistics and Data Science Education</em>, December, 1–6. <a href="https://doi.org/10.1080/26939169.2023.2276446">https://doi.org/10.1080/26939169.2023.2276446</a>.
+</div>
+<div id="ref-onthei1999" class="csl-entry" role="listitem">
+Robins, James M., and Larry Wasserman. 1999. <em>On the Impossibility of Inferring Causation from Association Without Background Knowledge</em>. The MIT Press. <a href="https://doi.org/10.7551/mitpress/2006.003.0012">https://doi.org/10.7551/mitpress/2006.003.0012</a>.
+</div>
+<div id="ref-Westreich2013" class="csl-entry" role="listitem">
+Westreich, D., and S. Greenland. 2013. <span>“The Table 2 Fallacy: Presenting and Interpreting Confounder and Modifier Coefficients.”</span> <em>American Journal of Epidemiology</em> 177 (4): 292–98. <a href="https://doi.org/10.1093/aje/kws412">https://doi.org/10.1093/aje/kws412</a>.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>生成这些数据集的模型见 <span class="citation" data-cites="dagostinomcgowan2023">D’Agostino McGowan et al. (<a href="99-references.html#ref-dagostinomcgowan2023" role="doc-biblioref">2023</a>)</span>。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>对于 M 偏倚，在模型中纳入 <code>covariate</code> 的帮助程度，取决于它包含多少有关结局原因之一 <code>u2</code> 的信息。 本例的数据生成机制使 <code>covariate</code> 包含的 <code>u1</code> 信息多于 <code>u2</code>，因此增加的预测价值不那么大。 <code>u2</code> 未能解释的部分主要表现为随机噪声。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>回顾一下，表二谬误得名于健康研究期刊的一种惯例：在论文第二张表中列出完整的一组模型系数。 有关表二谬误的详细讨论见 <span class="citation" data-cites="Westreich2013">Westreich and Greenland (<a href="99-references.html#ref-Westreich2013" role="doc-biblioref">2013</a>)</span>。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>此外，OLS 产生的是<em>可折叠</em>效应。 其他效应（如比值比和风险比）是<em>不可折叠</em>的，这意味着即使不存在混杂，条件比值比或风险比也可能不同于其边际版本。 我们将在 <span class="quarto-unresolved-ref">?sec-non-collapse</span> 中讨论不可折叠性。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>从事”随意”推断（<em>casual inference</em>）的人会以这种方式从单个模型解释<em>许多</em>效应，但我们认为这是一种逞强之举。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/04-dags.html" class="pagination-link" aria-label="使用 DAG 表达因果问题">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">使用 DAG 表达因果问题</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/99-references.html" class="pagination-link" aria-label="参考文献">
+        <span class="nav-page-text">参考文献</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/edit/main/chapters/05-not-just-a-stats-problem.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/LuLab-SYSU/Causal-Inference-in-R-Chinese/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
